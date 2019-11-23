@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`withReduxCookiePersist should integrate the store using next-redux-wrapper 1`] = `
+<div>
+  {"isServer":true,"custom":"custom"}
+  {"reduxStatus":"init"}
+</div>
+`;
+
+exports[`withReduxCookiePersist should integrate the store using next-redux-wrapper 2`] = `
+<div>
+  {"isServer":true,"custom":"custom"}
+  {"reduxStatus":"foo"}
+</div>
+`;
+
+exports[`withReduxCookiePersist with malformed state cookies provided should use the default state (pass undefined to makeStore) 1`] = `
+<div>
+  {"isServer":true,"custom":"custom"}
+  {"reduxStatus":"init"}
+</div>
+`;
+
+exports[`withReduxCookiePersist with state cookies provided should use the cookies' state and pass it to makeStore() at its first call 1`] = `
+<div>
+  {"isServer":true,"custom":"custom"}
+  {"reduxStatus":"fromCookie"}
+</div>
+`;
+
+exports[`withReduxCookiePersist without state cookies should pass initialState = undefined to makeStore() at its first call 1`] = `
+<div>
+  {"isServer":true,"custom":"custom"}
+  {"reduxStatus":"init"}
+</div>
+`;

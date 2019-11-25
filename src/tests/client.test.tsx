@@ -12,7 +12,7 @@ const expectPersistCookies = (expectedReduxStatus: string) => {
   expect(Cookies.get("persist:root")).toBe('{"reduxStatus":"\\"' + expectedReduxStatus + '\\""}');
 };
 
-const appCtx = { ctx: {} };
+const appCtx: any = { ctx: {} };
 
 describe("withReduxCookiePersist", () => {
   it("should integrate the store using next-redux-wrapper", async () => {

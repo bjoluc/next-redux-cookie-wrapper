@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import renderer from "react-test-renderer";
 import { createStore } from "redux";
-import App, { AppContext } from "next/app";
-import { NextPageContext } from "next";
+import { AppContext } from "next/app";
 
 // Based on the next-redux-wrapper tests
-
-export type StubbedNextAppContext = Pick<AppContext, "ctx">;
 
 export const reducer = (state = { reduxStatus: "init" }, action: any) => {
   switch (action.type) {

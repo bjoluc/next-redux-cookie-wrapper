@@ -4,17 +4,11 @@
 
 import { withReduxCookiePersist } from "..";
 import httpMocks from "node-mocks-http";
+// @ts-ignore No type definitions and we do not want to create a global definition in this package
 import { NodeCookiesWrapper } from "redux-persist-cookie-storage";
-import {
-  makeStore,
-  StoreApp,
-  verifyComponent,
-  PlainApp,
-  StubbedNextAppContext,
-  FlushStateStorePage,
-} from "./util";
+import { makeStore, StoreApp, verifyComponent, PlainApp, FlushStateStorePage } from "./util";
 
-let appCtx: StubbedNextAppContext;
+let appCtx: any;
 
 let setCookie: jest.Mock;
 
@@ -33,7 +27,6 @@ beforeEach(() => {
       req,
       res,
       query: {},
-      AppTree: () => null,
     },
   };
 });

@@ -1,12 +1,9 @@
-// Augment next.js contexts
-import "next";
-import { Store } from "redux";
-import { AppContext as NextAppContext } from "next/app";
+// Augment next.js AppContext
 import { FlushReduxStateToCookies } from ".";
 import { NextJSContext } from "next-redux-wrapper";
 
 declare module "next/app" {
-  declare type AppContext = NextAppContext & {
+  type AppContext = {
     flushReduxStateToCookies: FlushReduxStateToCookies;
     ctx: NextJSContext;
   };

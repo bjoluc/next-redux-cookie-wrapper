@@ -1,28 +1,28 @@
 import ServerCookies from "cookies";
 import ClientCookies from "cookies-js";
 import { IncomingMessage, ServerResponse } from "http";
-import { NextComponentType, NextPageContext } from "next";
-import { NextJSContext } from "next-redux-wrapper";
+import { NextComponentType } from "next";
+import {
+  Config as NextReduxWrapperConfig,
+  default as withRedux,
+  MakeStore,
+  MakeStoreOptions,
+  NextJSContext,
+  WrappedAppProps,
+} from "next-redux-wrapper";
 import { AppContext } from "next/app";
 import * as React from "react";
 import { createStore, Reducer, Store } from "redux";
-import { CookieStorage, NodeCookiesWrapper } from "redux-persist-cookie-storage";
 import {
-  default as withRedux,
-  Config as NextReduxWrapperConfig,
-  MakeStore,
-  NextJSAppContext,
-  WrappedAppProps,
-  MakeStoreOptions,
-} from "next-redux-wrapper";
-import {
-  getStoredState,
   createPersistoid,
-  persistReducer,
+  getStoredState,
   PersistConfig,
   Persistor,
+  persistReducer,
   persistStore,
 } from "redux-persist";
+// @ts-ignore No type definitions and we do not want to create a global definition in this package
+import { CookieStorage, NodeCookiesWrapper } from "redux-persist-cookie-storage";
 
 export type CustomPersistConfig<S> = Omit<PersistConfig<S>, "storage" | "key"> &
   Partial<Pick<PersistConfig<S>, "key">>;
@@ -32,12 +32,7 @@ export type Config = NextReduxWrapperConfig & {
   cookieConfig?: any;
 };
 
-export type FlushReduxStateToCookies = (
-  ctx: NextPageContext,
-  rootReducer: Reducer
-) => Promise<void>;
-
-type NextReduxWrapperApp = ReturnType<ReturnType<typeof withRedux>>;
+export type FlushReduxStateToCookies = (ctx: NextJSContext, rootReducer: Reducer) => Promise<void>;
 
 const defaultPersistConfig = {
   key: "root",
@@ -69,6 +64,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
   const debug = reduxWrapperConfig.debug || false;
 
   const extractStateFromCookies = async (req: IncomingMessage, res: ServerResponse) => {
+    // @ts-ignore https://github.com/ScottHamper/Cookies/pull/83
     const cookies = new NodeCookiesWrapper(new ServerCookies(req, res));
 
     const persistConfig = {
@@ -106,7 +102,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
       });
     });
 
-  const flushReduxStateToCookies = async (ctx: NextJSContext, rootReducer: Reducer) => {
+  const flushReduxStateToCookies: FlushReduxStateToCookies = async (ctx, rootReducer) => {
     /* istanbul ignore if */
     if (!(ctx.req && ctx.res)) {
       if (debug) {
@@ -123,6 +119,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
       console.log("Flushing the store's current state to cookies via flushReduxStateToCookies...");
     }
 
+    // @ts-ignore https://github.com/ScottHamper/Cookies/pull/83
     const cookies = new NodeCookiesWrapper(new ServerCookies(ctx.req, ctx.res));
     const persistConfig = {
       ...sharedPersistConfig,

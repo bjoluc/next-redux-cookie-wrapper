@@ -1,7 +1,7 @@
+import { AppContext } from "next/app";
 import React, { Component } from "react";
 import renderer from "react-test-renderer";
 import { createStore } from "redux";
-import { AppContext } from "next/app";
 
 // Based on the next-redux-wrapper tests
 
@@ -43,9 +43,9 @@ export class StoreApp extends BaseApp {
 
 // Like StoreApp, but uses flushReduxStateToCookies
 export class FlushStateStorePage extends BaseApp {
-  public static async getInitialProps({ ctx, flushReduxStateToCookies }: AppContext) {
+  public static async getInitialProps({ ctx }: AppContext) {
     ctx.store.dispatch({ type: "ACTION", payload: "foo" });
-    await flushReduxStateToCookies(ctx, reducer);
+    await ctx.flushReduxStateToCookies();
     return { custom: "custom" };
   }
 }

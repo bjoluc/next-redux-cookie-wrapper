@@ -2,7 +2,7 @@
  * @jest-environment node
  **/
 
-import { withReduxCookiePersist } from "..";
+import { withReduxCookiePersist } from "../src/";
 import httpMocks from "node-mocks-http";
 // @ts-ignore No type definitions and we do not want to create a global definition in this package
 import { NodeCookiesWrapper } from "redux-persist-cookie-storage";
@@ -40,7 +40,7 @@ describe("withReduxCookiePersist", () => {
     await verifyComponent(WrappedApp, appCtx, "foo");
   });
 
-  describe("without state cookies", () => {
+  describe("without incoming cookies", () => {
     it("should pass initialState = undefined to makeStore() at its first call", async () => {
       const makeStoreSpy = jest.fn(makeStore);
       const WrappedApp = withReduxCookiePersist(makeStoreSpy)(PlainApp);
@@ -52,7 +52,7 @@ describe("withReduxCookiePersist", () => {
     });
   });
 
-  describe("with state cookies provided", () => {
+  describe("with incoming cookies", () => {
     beforeEach(() => {
       const cookies: { [key: string]: string } = {
         "persist:root": JSON.stringify({
@@ -75,11 +75,11 @@ describe("withReduxCookiePersist", () => {
     });
   });
 
-  describe("with malformed state cookies provided", () => {
+  describe("with malformed incoming cookies", () => {
     beforeEach(() => {
       const cookies: { [key: string]: string } = {
         "persist:root": JSON.stringify({
-          reduxStatus: "foobarbaz",
+          reduxStatus: "notAJsonString",
         }),
         reduxPersistIndex: '["persist:root"]',
       };
@@ -98,7 +98,7 @@ describe("withReduxCookiePersist", () => {
   });
 
   describe("flushReduxStateToCookies() called within getInitialProps()", () => {
-    describe.each([true, false])("state cookies: %p", withStateCookies => {
+    describe.each([true, false])("with incoming cookies: %p", withStateCookies => {
       it("should set cookies using NodeCookieWrapper", async () => {
         if (withStateCookies) {
           const cookies: { [key: string]: string } = {

@@ -3,7 +3,7 @@
  **/
 
 import { makeStore, PlainApp, StoreApp, verifyComponent } from "./util";
-import { withReduxCookiePersist } from "..";
+import { withReduxCookiePersist } from "../src/";
 import Cookies from "cookies-js";
 import delay from "delay";
 

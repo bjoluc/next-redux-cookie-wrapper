@@ -1,18 +1,18 @@
 import ServerCookies from "cookies";
 import ClientCookies from "cookies-js";
 import { IncomingMessage, ServerResponse } from "http";
-import { NextComponentType } from "next";
+import { NextComponentType, NextPageContext } from "next";
 import {
   Config as NextReduxWrapperConfig,
   default as withRedux,
   MakeStore,
   MakeStoreOptions,
-  NextJSContext,
+  NextJSAppContext,
   WrappedAppProps,
 } from "next-redux-wrapper";
 import { AppContext } from "next/app";
 import * as React from "react";
-import { createStore, Reducer, Store } from "redux";
+import { Action, AnyAction, createStore, Store } from "redux";
 import {
   createPersistoid,
   getStoredState,
@@ -32,7 +32,7 @@ export type Config = NextReduxWrapperConfig & {
   cookieConfig?: any;
 };
 
-export type FlushReduxStateToCookies = (ctx: NextJSContext, rootReducer: Reducer) => Promise<void>;
+export type FlushReduxStateToCookies = () => Promise<void>;
 
 const defaultPersistConfig = {
   key: "root",
@@ -102,9 +102,9 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
       });
     });
 
-  const flushReduxStateToCookies: FlushReduxStateToCookies = async (ctx, rootReducer) => {
+  async function flushReduxStateToCookies(this: NextPageContext) {
     /* istanbul ignore if */
-    if (!(ctx.req && ctx.res)) {
+    if (!(this.req && this.res)) {
       if (debug) {
         console.log(
           "flushReduxStateToCookies only works on the server " +
@@ -120,7 +120,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
     }
 
     // @ts-ignore https://github.com/ScottHamper/Cookies/pull/83
-    const cookies = new NodeCookiesWrapper(new ServerCookies(ctx.req, ctx.res));
+    const cookies = new NodeCookiesWrapper(new ServerCookies(this.req, this.res));
     const persistConfig = {
       ...sharedPersistConfig,
       blacklist: sharedPersistConfig.blacklist!.concat(["_persist"]),
@@ -137,8 +137,9 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
       },
     };
 
-    const reducer = persistReducer(persistConfig, rootReducer);
-    const store = createStore(reducer, ctx.store.getState());
+    // Using a dummy reducer here as we do not dispatch actions to this store
+    const reducer = persistReducer(persistConfig, (state, action) => state);
+    const store = createStore(reducer, this.store.getState());
     const persistor = await createPersistor(store);
 
     // Set cookies
@@ -148,7 +149,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
     if (debug) {
       console.log("State flushed to cookies: ", store.getState());
     }
-  };
+  }
 
   const wrappedMakeStore = (initialState: any, options: MakeStoreOptions) => {
     if (options.req && options.res) {
@@ -197,9 +198,9 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
           (appCtx.ctx.req as any).__initialReduxCookieState = state;
         }
 
-        appCtx.flushReduxStateToCookies = flushReduxStateToCookies;
+        appCtx.ctx.flushReduxStateToCookies = flushReduxStateToCookies;
 
-        return await WrappedApp.getInitialProps(appCtx);
+        return await WrappedApp.getInitialProps(appCtx as NextJSAppContext);
       };
 
       public render() {
@@ -208,3 +209,29 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
     };
   };
 };
+
+// Augment Next.js NextPageContext
+declare module "next/dist/next-server/lib/utils" {
+  export interface NextPageContext<S = any, A extends Action = AnyAction> {
+    /**
+     * Provided by next-redux-wrapper: Whether the code is executed on the server or the client side
+     */
+    isServer: boolean;
+
+    /**
+     * Provided by next-redux-wrapper: The redux store
+     */
+    store: Store<S, A>;
+
+    /**
+     * Provided by next-redux-cookie-wrapper: If the code is executed on the server and `ctx.req`
+     * and `ctx.res` are set, this method will add a cookies header with the redux store's current
+     * state to `ctx.res`.
+     *
+     * Note: This will only take effect if you redirect the client afterwards. Otherwise, do not
+     * call this function – the client will use the up-to-date serialized state contained in the
+     * HTML response anyway and overwrite the cookies with it.
+     */
+    flushReduxStateToCookies: FlushReduxStateToCookies;
+  }
+}

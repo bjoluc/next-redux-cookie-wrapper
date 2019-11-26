@@ -14,21 +14,21 @@ exports[`withReduxCookiePersist should integrate the store using next-redux-wrap
 </div>
 `;
 
-exports[`withReduxCookiePersist with malformed state cookies provided should use the default state (pass undefined to makeStore) 1`] = `
-<div>
-  {"isServer":true,"custom":"custom"}
-  {"reduxStatus":"init"}
-</div>
-`;
-
-exports[`withReduxCookiePersist with state cookies provided should use the cookies' state and pass it to makeStore() at its first call 1`] = `
+exports[`withReduxCookiePersist with incoming cookies should use the cookies' state and pass it to makeStore() at its first call 1`] = `
 <div>
   {"isServer":true,"custom":"custom"}
   {"reduxStatus":"fromCookie"}
 </div>
 `;
 
-exports[`withReduxCookiePersist without state cookies should pass initialState = undefined to makeStore() at its first call 1`] = `
+exports[`withReduxCookiePersist with malformed incoming cookies should use the default state (pass undefined to makeStore) 1`] = `
+<div>
+  {"isServer":true,"custom":"custom"}
+  {"reduxStatus":"init"}
+</div>
+`;
+
+exports[`withReduxCookiePersist without incoming cookies should pass initialState = undefined to makeStore() at its first call 1`] = `
 <div>
   {"isServer":true,"custom":"custom"}
   {"reduxStatus":"init"}

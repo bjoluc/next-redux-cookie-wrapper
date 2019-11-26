@@ -1,19 +1,13 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "noEmit": true,
     "moduleResolution": "node",
-    "allowJs": true,
-    "strict": true,
-    "isolatedModules": true,
+    "module": "es6",
+    "strict": false,
     "esModuleInterop": true,
-    "jsx": "react"
+    "declaration": true,
+    "declarationDir": "./dist",
+    "jsx": "react",
+    "skipLibCheck": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ]
+  "exclude": ["node_modules", "dist", "tests"],
 }

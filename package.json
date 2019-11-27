@@ -1,9 +1,9 @@
 {
   "name": "next-redux-cookie-wrapper",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "Use redux-persist and redux-persist-cookie-storage in Next.js – with ease",
   "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
+  "module": "dist/index.esm.js",
   "files": [
     "dist"
   ],
@@ -18,11 +18,12 @@
     "test:coverage": "npm run test -- --coverage",
     "tsc": "tsc --noEmit",
     "build": "rollup -c",
-    "watch": "rollup -cw"
+    "watch": "rollup -cw",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bjoluc/next-redux-cookie-wrapper.git"
+    "url": "https://github.com/bjoluc/next-redux-cookie-wrapper.git"
   },
   "author": "bjoluc <mail@bjoluc.de>",
   "license": "MIT",
@@ -30,6 +31,11 @@
     "url": "https://github.com/bjoluc/next-redux-cookie-wrapper/issues"
   },
   "homepage": "https://github.com/bjoluc/next-redux-cookie-wrapper#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "dependencies": {
     "cookies": "0.8.0",
     "cookies-js": "1.2.3",
@@ -43,18 +49,27 @@
     "redux": "4.x"
   },
   "devDependencies": {
+    "@commitlint/cli": "8.2.0",
+    "@commitlint/config-conventional": "8.2.0",
+    "@jedmao/semantic-release-npm-github-config": "1.0.8",
     "@types/jest": "24.0.23",
     "@types/node": "12.12.12",
     "@types/react": "16.9.13",
     "@types/react-test-renderer": "16.9.1",
+    "commitizen": "4.0.3",
+    "cz-conventional-changelog": "3.0.2",
     "delay": "4.3.0",
+    "husky": "3.1.0",
     "jest": "24.9.0",
+    "lint-staged": "9.5.0",
     "next": "9.1.4",
     "node-mocks-http": "1.8.0",
+    "prettier": "1.19.1",
     "react-test-renderer": "16.12.0",
     "redux": "4.0.4",
     "rollup": "1.27.5",
     "rollup-plugin-typescript2": "0.25.2",
+    "semantic-release": "15.13.31",
     "ts-jest": "24.2.0",
     "typescript": "3.7.2"
   }

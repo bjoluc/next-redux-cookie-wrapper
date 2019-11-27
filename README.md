@@ -1,6 +1,8 @@
 # next-redux-cookie-wrapper
 
 [![Build Status](https://travis-ci.org/bjoluc/next-redux-cookie-wrapper.svg?branch=master)](https://travis-ci.org/bjoluc/next-redux-cookie-wrapper)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+
 
 A drop-in replacement for [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper) that adds [Redux Persist](https://github.com/rt2zz/redux-persist) with [redux-persist-cookie-storage](https://github.com/abersager/redux-persist-cookie-storage) to the equipment list – configured out of the box.
 

@@ -1,5 +1,6 @@
 # next-redux-cookie-wrapper
 
+[![npm version](https://badge.fury.io/js/next-redux-cookie-wrapper.svg)](https://badge.fury.io/js/next-redux-cookie-wrapper)
 [![Build Status](https://travis-ci.org/bjoluc/next-redux-cookie-wrapper.svg?branch=master)](https://travis-ci.org/bjoluc/next-redux-cookie-wrapper)
 [![codecov](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper/branch/master/graph/badge.svg)](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)

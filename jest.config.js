@@ -7,5 +7,6 @@ module.exports = {
       tsConfig: "tsconfig.json",
     },
   },
+  coverageDirectory: "./coverage/",
   coverageReporters: ["json", "lcov", "text", "text-summary"],
 };

@@ -4,8 +4,8 @@ node_js:
   - 10
   - 11
 install:
+  - npm ci
   - npm install -g codecov
-
 script:
   - npm run tsc
   - npm run test:coverage && codecov

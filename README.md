@@ -7,7 +7,6 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-
 A drop-in replacement for [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper) that adds [Redux Persist](https://github.com/rt2zz/redux-persist) with [redux-persist-cookie-storage](https://github.com/abersager/redux-persist-cookie-storage) to the equipment list – configured out of the box.
 
 ## Motivation
@@ -83,6 +82,7 @@ export default withReduxCookiePersist(makeStore, {
   },
 })(MyApp);
 ```
+
 You should aim to persist as little state as possible because the cookies' Redux state is included in every request and cookies have a size limit.
 
 ### cookieConfig
@@ -119,7 +119,7 @@ next-redux-cookie-wrapper also adds debugging output when the `debug` flag is se
 ## Usage with TypeScript
 
 No manual type changes are required (next-redux-cookie-wrapper augments the `NextPageContext` type).
-Here's a quick minimal example:
+Here's a quick minimal example `_app.tsx`:
 
 ```tsx
 import { makeStore } from "../lib/store"; // wherever your makeStore function is located
@@ -149,8 +149,6 @@ class MyApp extends App {
 export default withReduxCookiePersist(makeStore)(MyApp);
 ```
 
-
-
 ## Usage with Redux Saga
 
 Check out [next-redux-saga](https://github.com/bmealhouse/next-redux-saga).
@@ -169,11 +167,12 @@ There may be situations in which you want to redirect the client in `getInitialP
 [This](https://github.com/zeit/next.js/wiki/Redirecting-in-%60getInitialProps%60) is a Next.js example how to achieve this.
 You may also dispatch actions in `getInitialProps()`.
 However, when you redirect after having modified the store's state you effectively loose any state modifications because the modified state is not transferred to the client (state is regularly transferred via Next.js' initialProps).
-To avoid this, next-redux-cookie-wrapper adds a `flushReduxStateToCookies()` method to the page context.
+To help avoiding this, next-redux-cookie-wrapper adds a `flushReduxStateToCookies()` method to the page context.
 It sets a cookie header on the response object, updating the client's cookies with the modified state.
 Hence, when the client follows the redirect it will provide the up-to-date state cookies to the server.
 
-Example usage:
+Example usage in a page component:
+
 ```js
 import { createMyAction } from "../lib/store/actions";
 import React from 'react'
@@ -182,6 +181,7 @@ import Router from 'next/router'
 export default class extends React.Component {
   static async getInitialProps(ctx) {
     ctx.store.dispatch(createMyAction())
+
     if (ctx.res) {
       // Server-side redirect
       ctx.flushReduxStateToCookies()
@@ -193,6 +193,7 @@ export default class extends React.Component {
       // Client-side redirect
       Router.push('/about')
     }
+    
     return {}
   }
 }

@@ -1,4 +1,13 @@
 {
   "extends": "@jedmao/semantic-release-npm-github-config",
-  "branch": "master"
+  "branch": "master",
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [{ "type": "docs", "scope": "readme", "release": "patch" }]
+      }
+    ]
+  ]
 }

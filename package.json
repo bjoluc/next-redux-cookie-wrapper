@@ -51,7 +51,12 @@
   "devDependencies": {
     "@commitlint/cli": "8.2.0",
     "@commitlint/config-conventional": "8.2.0",
-    "@jedmao/semantic-release-npm-github-config": "1.0.8",
+    "@semantic-release/changelog": "^3.0.5",
+    "@semantic-release/commit-analyzer": "^6.3.2",
+    "@semantic-release/git": "^7.0.17",
+    "@semantic-release/github": "^5.5.5",
+    "@semantic-release/npm": "^5.3.4",
+    "@semantic-release/release-notes-generator": "^7.3.2",
     "@types/jest": "24.0.23",
     "@types/node": "12.12.12",
     "@types/react": "16.9.13",

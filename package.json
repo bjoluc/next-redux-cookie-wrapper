@@ -31,11 +31,6 @@
     "url": "https://github.com/bjoluc/next-redux-cookie-wrapper/issues"
   },
   "homepage": "https://github.com/bjoluc/next-redux-cookie-wrapper#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
   "dependencies": {
     "cookies": "0.8.0",
     "cookies-js": "1.2.3",
@@ -78,5 +73,31 @@
     "semantic-release": "15.13.31",
     "ts-jest": "24.2.0",
     "typescript": "3.7.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "subject-case": [
+        2,
+        "always",
+        [
+          "sentence-case"
+        ]
+      ],
+      "scope-case": [
+        2,
+        "never",
+        [
+          "lower-case"
+        ]
+      ]
+    }
   }
 }

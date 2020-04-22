@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.0.1...v1.1.0) (2020-04-22)
+
+
+### Features
+
+* **TypeScript:** Improve TypeScript support ([0adbe34](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/0adbe340f11eb5fbc8a2ad98ae3255ea6d4d4e43))
+
 ## [1.0.1](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.0.0...v1.0.1) (2019-11-28)
 
 ### Documentation

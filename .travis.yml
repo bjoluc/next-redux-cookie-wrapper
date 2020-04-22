@@ -2,23 +2,22 @@ language: node_js
 node_js:
   - 8
   - 10
-  - 11
+  - 12
+  - 13
+  - 14
 script:
   - npm run tsc
   - npm run test:coverage && npx codecov
 after_success:
   - npm run build
-branches:
-  only:
-    - master
 jobs:
   include:
     # Define the release stage that runs semantic-release
     - stage: release
+      if: branch = master
       node_js: lts/*
       script: skip # Skip the tests this time
       deploy:
         provider: script
         skip_cleanup: true
-        script:
-          - npx semantic-release
+        script: "npx semantic-release"

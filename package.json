@@ -35,7 +35,7 @@
     "cookies": "0.8.0",
     "cookies-js": "1.2.3",
     "next-redux-wrapper": "5.0.0",
-    "react": "16.12.0",
+    "react": "16.13.1",
     "redux-persist": "6.0.0",
     "redux-persist-cookie-storage": "1.0.0"
   },
@@ -44,35 +44,36 @@
     "redux": "4.x"
   },
   "devDependencies": {
-    "@commitlint/cli": "8.2.0",
-    "@commitlint/config-conventional": "8.2.0",
-    "@semantic-release/changelog": "^3.0.5",
-    "@semantic-release/commit-analyzer": "^6.3.2",
-    "@semantic-release/git": "^7.0.17",
-    "@semantic-release/github": "^5.5.5",
-    "@semantic-release/npm": "^5.3.4",
-    "@semantic-release/release-notes-generator": "^7.3.2",
-    "@types/jest": "24.0.23",
-    "@types/node": "12.12.12",
-    "@types/react": "16.9.13",
-    "@types/react-test-renderer": "16.9.1",
-    "commitizen": "4.0.3",
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.0.5",
+    "@semantic-release/npm": "^7.0.5",
+    "@semantic-release/release-notes-generator": "^9.0.1",
+    "@types/jest": "25.2.1",
+    "@types/node": "13.13.2",
+    "@types/react": "16.9.34",
+    "@types/react-test-renderer": "16.9.2",
+    "commitizen": "4.0.4",
     "conventional-changelog-conventionalcommits": "^4.2.3",
-    "cz-conventional-changelog": "3.0.2",
+    "cz-conventional-changelog": "3.1.0",
     "delay": "4.3.0",
-    "husky": "3.1.0",
-    "jest": "24.9.0",
-    "lint-staged": "9.5.0",
+    "husky": "4.2.5",
+    "jest": "25.4.0",
+    "lint-staged": "10.1.7",
     "next": "9.3.2",
-    "node-mocks-http": "1.8.0",
-    "prettier": "1.19.1",
-    "react-test-renderer": "16.12.0",
+    "node-mocks-http": "1.8.1",
+    "prettier": "2.0.5",
+    "react-test-renderer": "16.13.1",
     "redux": "4.0.4",
-    "rollup": "1.27.5",
-    "rollup-plugin-typescript2": "0.25.2",
-    "semantic-release": "15.13.31",
-    "ts-jest": "24.2.0",
-    "typescript": "3.7.2"
+    "rollup": "2.7.2",
+    "rollup-plugin-typescript2": "0.27.0",
+    "semantic-release": "17.0.7",
+    "ts-jest": "25.4.0",
+    "typesafe-actions": "5.1.0",
+    "typescript": "3.8.3"
   },
   "config": {
     "commitizen": {
@@ -92,12 +93,23 @@
         ]
       ],
       "scope-case": [
-        2,
+        1,
         "never",
         [
           "lower-case"
         ]
       ]
+    }
+  },
+  "lint-staged": {
+    "{src,tests}/**/*.ts(x)": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }

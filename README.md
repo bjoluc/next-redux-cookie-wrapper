@@ -116,39 +116,6 @@ export default withReduxCookiePersist(makeStore, {
 
 next-redux-cookie-wrapper also adds debugging output when the `debug` flag is set.
 
-## Usage with TypeScript
-
-No manual type changes are required (next-redux-cookie-wrapper augments the `NextPageContext` type).
-Here's a quick minimal example `_app.tsx`:
-
-```tsx
-import { makeStore } from "../lib/store"; // wherever your makeStore function is located
-import App, { AppContext } from "next/app";
-import * as React from "react";
-import { Provider } from "react-redux";
-import { withReduxCookiePersist } from "next-redux-cookie-wrapper";
-
-class MyApp extends App {
-  static async getInitialProps({ Component, ctx }: AppContext) {
-    return {
-      pageProps: Component.getInitialProps ? await Component.getInitialProps(ctx) : {},
-    };
-  }
-
-  render() {
-    const { Component, pageProps, store } = this.props as any;
-
-    return (
-      <Provider store={store}>
-        <Component {...pageProps} />
-      </Provider>
-    );
-  }
-}
-
-export default withReduxCookiePersist(makeStore)(MyApp);
-```
-
 ## Usage with Redux Saga
 
 Check out [next-redux-saga](https://github.com/bmealhouse/next-redux-saga).
@@ -193,7 +160,7 @@ export default class extends React.Component {
       // Client-side redirect
       Router.push('/about')
     }
-    
+
     return {}
   }
 }

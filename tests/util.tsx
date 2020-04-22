@@ -1,11 +1,16 @@
-import { AppContext } from "next/app";
-import React, { Component } from "react";
+import { ReduxWrapperAppProps } from "next-redux-wrapper";
+import App, { AppContext } from "next/app";
+import React from "react";
 import renderer from "react-test-renderer";
-import { createStore } from "redux";
+import { AnyAction, createStore } from "redux";
 
 // Based on the next-redux-wrapper tests
 
-export const reducer = (state = { reduxStatus: "init" }, action: any) => {
+export interface State {
+  reduxStatus: "init" | "custom";
+}
+
+export const reducer = (state: State = { reduxStatus: "init" }, action: AnyAction) => {
   switch (action.type) {
     case "ACTION":
       return { reduxStatus: action.payload };
@@ -14,9 +19,9 @@ export const reducer = (state = { reduxStatus: "init" }, action: any) => {
   }
 };
 
-export const makeStore = (initialState: any) => createStore(reducer, initialState);
+export const makeStore = (initialState: State) => createStore(reducer, initialState);
 
-class BaseApp extends Component<any> {
+class BaseApp extends App<ReduxWrapperAppProps<State>> {
   public render() {
     const { store, ...props } = this.props;
     return (
@@ -30,14 +35,14 @@ class BaseApp extends Component<any> {
 
 export class PlainApp extends BaseApp {
   public static async getInitialProps({ ctx }: AppContext) {
-    return { custom: "custom" };
+    return { custom: "custom", pageProps: {} };
   }
 }
 
 export class StoreApp extends BaseApp {
   public static async getInitialProps({ ctx }: AppContext) {
     ctx.store.dispatch({ type: "ACTION", payload: "foo" });
-    return { custom: "custom" };
+    return { custom: "custom", pageProps: {} };
   }
 }
 
@@ -46,7 +51,7 @@ export class FlushStateStorePage extends BaseApp {
   public static async getInitialProps({ ctx }: AppContext) {
     ctx.store.dispatch({ type: "ACTION", payload: "foo" });
     await ctx.flushReduxStateToCookies();
-    return { custom: "custom" };
+    return { custom: "custom", pageProps: {} };
   }
 }
 

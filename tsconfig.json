@@ -2,7 +2,8 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "module": "es6",
-    "strict": false,
+    "target": "es6",
+    "strict": true,
     "esModuleInterop": true,
     "declaration": true,
     "declarationDir": "./dist",

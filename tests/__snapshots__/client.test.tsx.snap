@@ -2,21 +2,21 @@
 
 exports[`withReduxCookiePersist should integrate the store using next-redux-wrapper 1`] = `
 <div>
-  {"isServer":false,"custom":"custom"}
+  {"isServer":false,"custom":"custom","pageProps":{}}
   {"reduxStatus":"init"}
 </div>
 `;
 
 exports[`withReduxCookiePersist should integrate the store using next-redux-wrapper 2`] = `
 <div>
-  {"isServer":false,"custom":"custom"}
+  {"isServer":false,"custom":"custom","pageProps":{}}
   {"reduxStatus":"foo"}
 </div>
 `;
 
 exports[`withReduxCookiePersist should persist actions dispatched during getInitialProps to cookies 1`] = `
 <div>
-  {"isServer":false,"custom":"custom"}
+  {"isServer":false,"custom":"custom","pageProps":{}}
   {"reduxStatus":"foo"}
 </div>
 `;

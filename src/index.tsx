@@ -7,7 +7,6 @@ import {
   default as withRedux,
   MakeStore,
   MakeStoreOptions,
-  NextJSAppContext,
   WrappedAppProps,
 } from "next-redux-wrapper";
 import { AppContext } from "next/app";
@@ -96,7 +95,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
 
   // Used internally by flushReduxStateToCookies()
   const createPersistor = (store: Store): Promise<Persistor> =>
-    new Promise(resolve => {
+    new Promise((resolve) => {
       const persistor = persistStore(store, {}, () => {
         resolve(persistor);
       });
@@ -200,7 +199,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
 
         appCtx.ctx.flushReduxStateToCookies = flushReduxStateToCookies;
 
-        return await WrappedApp.getInitialProps(appCtx as NextJSAppContext);
+        return await WrappedApp.getInitialProps(appCtx);
       };
 
       public render() {
@@ -213,16 +212,6 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
 // Augment Next.js NextPageContext
 declare module "next/dist/next-server/lib/utils" {
   export interface NextPageContext<S = any, A extends Action = AnyAction> {
-    /**
-     * Provided by next-redux-wrapper: Whether the code is executed on the server or the client side
-     */
-    isServer: boolean;
-
-    /**
-     * Provided by next-redux-wrapper: The redux store
-     */
-    store: Store<S, A>;
-
     /**
      * Provided by next-redux-cookie-wrapper: If the code is executed on the server and `ctx.req`
      * and `ctx.res` are set, this method will add a cookies header with the redux store's current

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [1.1.1](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.1.0...v1.1.1) (2020-05-13)
+
+
+### Bug Fixes
+
+* **Documentation:** Explicitly mention next-redux-wrapper v5 ([9a42588](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/9a42588f0df2285097adca032198a681f118c455))
+
 ## [1.1.0](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.0.1...v1.1.0) (2020-04-22)
 
 

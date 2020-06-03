@@ -130,7 +130,6 @@ will do the job!
 ## Redirecting in `getInitialProps()`
 
 There may be situations in which you want to redirect the client in `getInitialProps()`.
-[This](https://github.com/zeit/next.js/wiki/Redirecting-in-%60getInitialProps%60) is a Next.js example how to achieve this.
 You may also dispatch actions in `getInitialProps()`.
 However, when you redirect after having modified the store's state you effectively loose any state modifications because the modified state is not transferred to the client (state is regularly transferred via Next.js' initialProps).
 To help avoiding this, next-redux-cookie-wrapper adds a `flushReduxStateToCookies()` method to the page context.

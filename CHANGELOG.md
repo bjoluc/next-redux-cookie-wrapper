@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [1.1.2](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.1.1...v1.1.2) (2020-07-14)
+
+
+### Bug Fixes
+
+* Pass `cookieConfig` to `CookieStorage` on client side ([37d625e](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/37d625ea2e1e18f149945e15cc9ea25e8b9375fb)), closes [#7](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/7)
+
 ### [1.1.1](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.1.0...v1.1.1) (2020-05-13)
 
 

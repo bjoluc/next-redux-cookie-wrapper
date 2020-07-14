@@ -68,7 +68,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
 
     const persistConfig = {
       ...sharedPersistConfig,
-      storage: new CookieStorage(cookies),
+      storage: new CookieStorage(cookies, sharedCookieConfig),
     };
 
     let state: any | undefined;
@@ -161,7 +161,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
       // Let's persist the store!
       const persistConfig = {
         ...sharedPersistConfig,
-        storage: new CookieStorage(ClientCookies),
+        storage: new CookieStorage(ClientCookies, sharedCookieConfig),
       };
 
       // Note: We do not create a persistor here because we need no rehydration.

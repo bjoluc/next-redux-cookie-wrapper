@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [1.1.3](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.1.2...v1.1.3) (2020-07-18)
+
+
+### Bug Fixes
+
+* **Build:** Exclude server-side `cookies` library from Webpack build ([6c3f044](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/6c3f044428318dfe335ac4a01f891d3de272fbac)), closes [#8](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/8)
+
 ### [1.1.2](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.1.1...v1.1.2) (2020-07-14)
 
 

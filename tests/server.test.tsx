@@ -2,11 +2,12 @@
  * @jest-environment node
  **/
 
-import { withReduxCookiePersist } from "../src/";
 import httpMocks from "node-mocks-http";
 // @ts-ignore No type definitions and we do not want to create a global definition in this package
 import { NodeCookiesWrapper } from "redux-persist-cookie-storage";
-import { makeStore, StoreApp, verifyComponent, PlainApp, FlushStateStorePage } from "./util";
+
+import { withReduxCookiePersist } from "../src/";
+import { FlushStateStorePage, PlainApp, StoreApp, makeStore, verifyComponent } from "./util";
 
 let appCtx: any;
 
@@ -61,7 +62,7 @@ describe("withReduxCookiePersist", () => {
         }),
         reduxPersistIndex: '["persist:root"]',
       };
-      NodeCookiesWrapper.prototype.get = jest.fn(key => cookies[key]);
+      NodeCookiesWrapper.prototype.get = jest.fn((key) => cookies[key]);
     });
 
     it("should use the cookies' state and pass it to makeStore() at its first call", async () => {
@@ -83,7 +84,7 @@ describe("withReduxCookiePersist", () => {
         }),
         reduxPersistIndex: '["persist:root"]',
       };
-      NodeCookiesWrapper.prototype.get = jest.fn(key => cookies[key]);
+      NodeCookiesWrapper.prototype.get = jest.fn((key) => cookies[key]);
     });
 
     it("should use the default state (pass undefined to makeStore)", async () => {
@@ -98,7 +99,7 @@ describe("withReduxCookiePersist", () => {
   });
 
   describe("flushReduxStateToCookies() called within getInitialProps()", () => {
-    describe.each([true, false])("with incoming cookies: %p", withStateCookies => {
+    describe.each([true, false])("with incoming cookies: %p", (withStateCookies) => {
       it("should set cookies using NodeCookieWrapper", async () => {
         if (withStateCookies) {
           const cookies: { [key: string]: string } = {
@@ -108,7 +109,7 @@ describe("withReduxCookiePersist", () => {
             }),
             reduxPersistIndex: '["persist:root"]',
           };
-          NodeCookiesWrapper.prototype.get = jest.fn(key => cookies[key]);
+          NodeCookiesWrapper.prototype.get = jest.fn((key) => cookies[key]);
         }
 
         const WrappedApp = withReduxCookiePersist(makeStore)(FlushStateStorePage);

@@ -2,10 +2,11 @@
  * @jest-environment jsdom
  **/
 
-import { makeStore, PlainApp, StoreApp, verifyComponent } from "./util";
-import { withReduxCookiePersist } from "../src/";
 import Cookies from "cookies-js";
 import delay from "delay";
+
+import { withReduxCookiePersist } from "../src/";
+import { PlainApp, StoreApp, makeStore, verifyComponent } from "./util";
 
 const expectPersistCookies = (expectedReduxStatus: string) => {
   expect(Cookies.get("reduxPersistIndex")).toBe('["persist:root"]');

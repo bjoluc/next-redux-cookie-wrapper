@@ -1,22 +1,23 @@
+import { IncomingMessage, ServerResponse } from "http";
+
 import ServerCookies from "cookies";
 import ClientCookies from "cookies-js";
-import { IncomingMessage, ServerResponse } from "http";
 import { NextComponentType, NextPageContext } from "next";
 import {
-  Config as NextReduxWrapperConfig,
-  default as withRedux,
   MakeStore,
   MakeStoreOptions,
+  Config as NextReduxWrapperConfig,
   WrappedAppProps,
+  default as withRedux,
 } from "next-redux-wrapper";
 import { AppContext } from "next/app";
 import * as React from "react";
-import { Action, AnyAction, createStore, Store } from "redux";
+import { Action, AnyAction, Store, createStore } from "redux";
 import {
-  createPersistoid,
-  getStoredState,
   PersistConfig,
   Persistor,
+  createPersistoid,
+  getStoredState,
   persistReducer,
   persistStore,
 } from "redux-persist";

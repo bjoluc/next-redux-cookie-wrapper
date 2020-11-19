@@ -72,7 +72,7 @@
     "redux": "4.0.4",
     "rollup": "2.22.0",
     "rollup-plugin-typescript2": "0.27.1",
-    "semantic-release": "17.1.1",
+    "semantic-release": "17.2.3",
     "ts-jest": "26.1.3",
     "typesafe-actions": "5.1.0",
     "typescript": "3.9.7"

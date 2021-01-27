@@ -35,13 +35,14 @@
     "cookies": "0.8.0",
     "cookies-js": "1.2.3",
     "next-redux-wrapper": "5.0.0",
-    "react": "17.0.1",
+    "react": "^17.0.1",
     "redux-persist": "6.0.0",
     "redux-persist-cookie-storage": "1.0.0"
   },
   "peerDependencies": {
     "next": "9.x",
-    "redux": "4.x"
+    "redux": "4.x",
+    "react": "17.x"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
@@ -52,6 +53,7 @@
     "@semantic-release/github": "7.2.0",
     "@semantic-release/npm": "^7.0.10",
     "@semantic-release/release-notes-generator": "^9.0.1",
+    "@types/cookies": "^0.7.6",
     "@types/jest": "26.0.20",
     "@types/node": "14.14.22",
     "@types/react": "17.0.0",

@@ -78,6 +78,9 @@
     "ts-jest": "26.4.4",
     "typescript": "3.9.7"
   },
+  "browser": {
+    "cookies": false
+  },
   "prettier": {
     "trailingComma": "es5",
     "tabWidth": 2,

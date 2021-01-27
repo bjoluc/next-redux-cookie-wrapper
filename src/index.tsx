@@ -1,5 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
 
+import ServerCookies from "cookies";
 import { NextComponentType, NextPageContext } from "next";
 import {
   MakeStore,
@@ -21,9 +22,6 @@ import {
 } from "redux-persist";
 // @ts-ignore No type definitions and we do not want to create a global definition in this package
 import { CookieStorage, NodeCookiesWrapper } from "redux-persist-cookie-storage";
-
-// Import `cookies` only on server side
-const ServerCookies = typeof window === "undefined" ? eval('require("cookies")') : null;
 
 export type CustomPersistConfig<S> = Omit<PersistConfig<S>, "storage" | "key"> &
   Partial<Pick<PersistConfig<S>, "key">>;

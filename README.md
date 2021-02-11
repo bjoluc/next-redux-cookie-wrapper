@@ -1,7 +1,7 @@
 # next-redux-cookie-wrapper
 
-[![npm version](https://badge.fury.io/js/next-redux-cookie-wrapper.svg)](https://badge.fury.io/js/next-redux-cookie-wrapper)
-[![build](https://github.com/bjoluc/next-redux-cookie-wrapper/workflows/build/badge.svg)](https://github.com/bjoluc/next-redux-cookie-wrapper/actions)
+[![npm (tag)](https://img.shields.io/npm/v/next-redux-cookie-wrapper/latest)](https://www.npmjs.com/package/next-redux-cookie-wrapper)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bjoluc/next-redux-cookie-wrapper/build)](https://github.com/bjoluc/next-redux-cookie-wrapper/actions)
 [![codecov](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper/branch/master/graph/badge.svg)](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)

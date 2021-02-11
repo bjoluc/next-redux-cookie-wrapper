@@ -41,18 +41,13 @@
   },
   "peerDependencies": {
     "next": "9.x",
-    "redux": "4.x",
-    "react": "17.x"
+    "react": "17.x",
+    "redux": "4.x"
   },
   "devDependencies": {
+    "@bjoluc/semantic-release-config-npm": "^1.0.0",
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "^12.0.0",
-    "@semantic-release/changelog": "^5.0.1",
-    "@semantic-release/commit-analyzer": "^8.0.1",
-    "@semantic-release/git": "^9.0.0",
-    "@semantic-release/github": "7.2.0",
-    "@semantic-release/npm": "^7.0.10",
-    "@semantic-release/release-notes-generator": "^9.0.1",
     "@types/cookies": "^0.7.6",
     "@types/jest": "26.0.20",
     "@types/node": "14.14.22",
@@ -74,7 +69,7 @@
     "redux": "4.0.4",
     "rollup": "2.38.0",
     "rollup-plugin-typescript2": "0.29.0",
-    "semantic-release": "17.3.7",
+    "semantic-release": "^17.3.8",
     "ts-jest": "26.4.4",
     "typescript": "3.9.7"
   },
@@ -128,5 +123,8 @@
       "pre-commit": "lint-staged && npm test",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "release": {
+    "extends": "@bjoluc/semantic-release-config-npm"
   }
 }

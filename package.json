@@ -2,23 +2,28 @@
   "name": "next-redux-cookie-wrapper",
   "version": "1.1.4",
   "description": "Use redux-persist and redux-persist-cookie-storage in Next.js – with ease",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
-  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=12"
+  },
   "source": "src/index.tsx",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "start": "tsdx watch",
+    "test": "tsdx test --passWithNoTests --detectOpenHandles",
     "test:watch": "npm run test -- --watch",
-    "test:coverage": "npm run test -- --coverage",
     "tsc": "tsc --noEmit",
-    "build": "rollup -c",
-    "watch": "rollup -cw",
+    "build": "tsdx build",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
     "commit": "git-cz"
   },
   "repository": {
@@ -34,24 +39,23 @@
   "dependencies": {
     "cookies": "0.8.0",
     "cookies-js": "1.2.3",
-    "next-redux-wrapper": "5.0.0",
-    "react": "^17.0.1",
     "redux-persist": "6.0.0",
     "redux-persist-cookie-storage": "1.0.0"
   },
   "peerDependencies": {
-    "next": "9.x",
-    "react": "17.x",
-    "redux": "4.x"
+    "next": ">=9.0",
+    "react": ">=16"
   },
   "devDependencies": {
     "@bjoluc/semantic-release-config-npm": "^1.0.0",
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "^12.0.0",
+    "@size-limit/preset-small-lib": "^4.10.2",
     "@types/cookies": "^0.7.6",
     "@types/jest": "26.0.20",
     "@types/node": "14.14.22",
     "@types/react": "17.0.0",
+    "@types/react-dom": "^17.0.5",
     "@types/react-test-renderer": "17.0.0",
     "commitizen": "^4.2.3",
     "conventional-changelog-conventionalcommits": "^4.5.0",
@@ -59,19 +63,21 @@
     "delay": "4.4.0",
     "husky": "4.3.8",
     "import-sort-style-module": "6.0.0",
-    "jest": "26.6.3",
     "lint-staged": "10.5.3",
     "next": "^10.0.5",
+    "next-redux-wrapper": "^5.0.0",
     "node-mocks-http": "1.10.1",
     "prettier": "2.2.1",
     "prettier-plugin-import-sort": "0.0.6",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-test-renderer": "17.0.1",
     "redux": "4.0.4",
-    "rollup": "2.38.0",
-    "rollup-plugin-typescript2": "0.29.0",
     "semantic-release": "^17.3.8",
-    "ts-jest": "26.4.4",
-    "typescript": "3.9.7"
+    "size-limit": "^4.10.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
   },
   "browser": {
     "cookies": false
@@ -126,5 +132,15 @@
   },
   "release": {
     "extends": "@bjoluc/semantic-release-config-npm"
-  }
+  },
+  "size-limit": [
+    {
+      "path": "dist/next-redux-cookie-wrapper.cjs.production.min.js",
+      "limit": "11 KB"
+    },
+    {
+      "path": "dist/next-redux-cookie-wrapper.esm.js",
+      "limit": "10 KB"
+    }
+  ]
 }

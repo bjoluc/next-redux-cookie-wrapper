@@ -34,7 +34,7 @@ class BaseApp extends App<ReduxWrapperAppProps<State>> {
 }
 
 export class PlainApp extends BaseApp {
-  public static async getInitialProps({ ctx }: AppContext) {
+  public static async getInitialProps({ ctx: _ctx }: AppContext) {
     return { custom: "custom", pageProps: {} };
   }
 }

@@ -130,14 +130,14 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
           httpOnly: false, // Allow modifications on the client side
         },
       }),
-      stateReconciler(inboundState: any, originalState: any) {
+      stateReconciler(_inboundState: any, originalState: any) {
         // Ignore state from cookies, only use the store's current state
         return originalState;
       },
     };
 
     // Using a dummy reducer here as we do not dispatch actions to this store
-    const reducer = persistReducer(persistConfig, (state, action) => state);
+    const reducer = persistReducer(persistConfig, (state, _action) => state);
     const store = createStore(reducer, this.store.getState());
     const persistor = await createPersistor(store);
 

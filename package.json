@@ -21,10 +21,10 @@
     "test:watch": "npm run test -- --watch",
     "tsc": "tsc --noEmit",
     "build": "tsdx build",
-    "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "prepare": "tsdx build && husky install"
   },
   "repository": {
     "type": "git",
@@ -47,33 +47,33 @@
     "react": ">=16"
   },
   "devDependencies": {
-    "@bjoluc/semantic-release-config-npm": "^1.0.0",
-    "@commitlint/cli": "11.0.0",
-    "@commitlint/config-conventional": "^12.0.0",
+    "@bjoluc/semantic-release-config-npm": "^1.0.1",
+    "@commitlint/cli": "12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@size-limit/preset-small-lib": "^4.10.2",
     "@types/cookies": "^0.7.6",
-    "@types/jest": "26.0.20",
-    "@types/node": "14.14.22",
-    "@types/react": "17.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "15.0.3",
+    "@types/react": "17.0.5",
     "@types/react-dom": "^17.0.5",
-    "@types/react-test-renderer": "17.0.0",
-    "commitizen": "^4.2.3",
-    "conventional-changelog-conventionalcommits": "^4.5.0",
+    "@types/react-test-renderer": "17.0.1",
+    "commitizen": "^4.2.4",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
     "cz-conventional-changelog": "3.3.0",
-    "delay": "4.4.0",
-    "husky": "4.3.8",
+    "delay": "5.0.0",
+    "husky": "^6.0.0",
     "import-sort-style-module": "6.0.0",
-    "lint-staged": "10.5.3",
+    "lint-staged": "11.0.0",
     "next": "^10.0.5",
     "next-redux-wrapper": "^5.0.0",
     "node-mocks-http": "1.10.1",
-    "prettier": "2.2.1",
+    "prettier": "2.3.0",
     "prettier-plugin-import-sort": "0.0.6",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-test-renderer": "17.0.1",
-    "redux": "4.0.4",
-    "semantic-release": "^17.3.8",
+    "react-test-renderer": "17.0.2",
+    "redux": "4.1.0",
+    "semantic-release": "^17.4.3",
     "size-limit": "^4.10.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
@@ -95,7 +95,9 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "./node_modules/cz-conventional-changelog",
+      "disableScopeLowerCase": true,
+      "disableSubjectLowerCase": true
     }
   },
   "commitlint": {
@@ -123,12 +125,6 @@
     "{src,tests}/**/*.ts(x)": [
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm test",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
   },
   "release": {
     "extends": "@bjoluc/semantic-release-config-npm"

@@ -4,10 +4,10 @@
 
 import httpMocks from "node-mocks-http";
 // @ts-ignore No type definitions and we do not want to create a global definition in this package
-import { NodeCookiesWrapper } from "redux-persist-cookie-storage";
+import {NodeCookiesWrapper} from "redux-persist-cookie-storage";
 
-import { withReduxCookiePersist } from "../src/";
-import { FlushStateStorePage, PlainApp, StoreApp, makeStore, verifyComponent } from "./util";
+import {withReduxCookiePersist} from "../src";
+import {FlushStateStorePage, PlainApp, StoreApp, makeStore, verifyComponent} from "./util";
 
 let appCtx: any;
 
@@ -19,13 +19,13 @@ beforeEach(() => {
   setCookie = jest.fn();
   NodeCookiesWrapper.prototype.set = setCookie;
 
-  const req = httpMocks.createRequest({ url: "/" });
-  const res = httpMocks.createResponse({ req });
+  const request = httpMocks.createRequest({url: "/"});
+  const res = httpMocks.createResponse({req: request});
 
   appCtx = {
     ctx: {
       pathname: "/",
-      req,
+      req: request,
       res,
       query: {},
     },
@@ -55,10 +55,10 @@ describe("withReduxCookiePersist", () => {
 
   describe("with incoming cookies", () => {
     beforeEach(() => {
-      const cookies: { [key: string]: string } = {
+      const cookies: Record<string, string> = {
         "persist:root": JSON.stringify({
           reduxStatus: JSON.stringify("fromCookie"),
-          _persist: JSON.stringify({ version: -1, rehydrated: true }),
+          _persist: JSON.stringify({version: -1, rehydrated: true}),
         }),
         reduxPersistIndex: '["persist:root"]',
       };
@@ -72,13 +72,13 @@ describe("withReduxCookiePersist", () => {
       await verifyComponent(WrappedApp, appCtx, "fromCookie");
 
       expect(makeStoreSpy).toHaveBeenCalledTimes(2);
-      expect(makeStoreSpy.mock.calls[0][0]).toEqual({ reduxStatus: "fromCookie" });
+      expect(makeStoreSpy.mock.calls[0][0]).toEqual({reduxStatus: "fromCookie"});
     });
   });
 
   describe("with malformed incoming cookies", () => {
     beforeEach(() => {
-      const cookies: { [key: string]: string } = {
+      const cookies: Record<string, string> = {
         "persist:root": JSON.stringify({
           reduxStatus: "notAJsonString",
         }),
@@ -102,10 +102,10 @@ describe("withReduxCookiePersist", () => {
     describe.each([true, false])("with incoming cookies: %p", (withStateCookies) => {
       it("should set cookies using NodeCookieWrapper", async () => {
         if (withStateCookies) {
-          const cookies: { [key: string]: string } = {
+          const cookies: Record<string, string> = {
             "persist:root": JSON.stringify({
               reduxStatus: JSON.stringify("fromCookie"),
-              _persist: JSON.stringify({ version: -1, rehydrated: true }),
+              _persist: JSON.stringify({version: -1, rehydrated: true}),
             }),
             reduxPersistIndex: '["persist:root"]',
           };
@@ -121,12 +121,13 @@ describe("withReduxCookiePersist", () => {
             httpOnly: false,
           });
         }
+
         expect(setCookie).toHaveBeenCalledWith(
           "persist:root",
           JSON.stringify({
             reduxStatus: JSON.stringify("foo"),
           }),
-          { httpOnly: false }
+          {httpOnly: false}
         );
       });
     });

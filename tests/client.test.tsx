@@ -5,15 +5,15 @@
 import Cookies from "cookies-js";
 import delay from "delay";
 
-import { withReduxCookiePersist } from "../src/";
-import { PlainApp, StoreApp, makeStore, verifyComponent } from "./util";
+import {withReduxCookiePersist} from "../src";
+import {PlainApp, StoreApp, makeStore, verifyComponent} from "./util";
 
 const expectPersistCookies = (expectedReduxStatus: string) => {
   expect(Cookies.get("reduxPersistIndex")).toBe('["persist:root"]');
   expect(Cookies.get("persist:root")).toBe('{"reduxStatus":"\\"' + expectedReduxStatus + '\\""}');
 };
 
-const appCtx: any = { ctx: {} };
+const appCtx: any = {ctx: {}};
 
 describe("withReduxCookiePersist", () => {
   it("should integrate the store using next-redux-wrapper", async () => {

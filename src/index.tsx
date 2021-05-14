@@ -1,17 +1,16 @@
-import { IncomingMessage, ServerResponse } from "http";
+import {IncomingMessage, ServerResponse} from "http";
 
 import ServerCookies from "cookies";
-import { NextComponentType, NextPageContext } from "next";
-import {
+import {NextComponentType, NextPageContext} from "next";
+import withRedux, {
   MakeStore,
   MakeStoreOptions,
   Config as NextReduxWrapperConfig,
   WrappedAppProps,
-  default as withRedux,
 } from "next-redux-wrapper";
-import { AppContext } from "next/app";
+import {AppContext} from "next/app";
 import * as React from "react";
-import { Action, AnyAction, Store, createStore } from "redux";
+import {Action, AnyAction, Store, createStore} from "redux";
 import {
   PersistConfig,
   Persistor,
@@ -20,10 +19,11 @@ import {
   persistReducer,
   persistStore,
 } from "redux-persist";
-// @ts-ignore No type definitions and we do not want to create a global definition in this package
-import { CookieStorage, NodeCookiesWrapper } from "redux-persist-cookie-storage";
+// @ts-expect-error No type definitions and we do not want to create a global definition in this package
+import {CookieStorage, NodeCookiesWrapper} from "redux-persist-cookie-storage";
+import {Except} from "type-fest";
 
-export type CustomPersistConfig<S> = Omit<PersistConfig<S>, "storage" | "key"> &
+export type CustomPersistConfig<S> = Except<PersistConfig<S>, "storage" | "key"> &
   Partial<Pick<PersistConfig<S>, "key">>;
 
 export type Config = NextReduxWrapperConfig & {
@@ -48,7 +48,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
     ...defaultConfig,
     ...config,
   };
-  const { persistConfig, cookieConfig, ...reduxWrapperConfig } = config;
+  const {persistConfig, cookieConfig, ...reduxWrapperConfig} = config;
 
   const sharedPersistConfig = {
     ...defaultPersistConfig,
@@ -60,7 +60,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
     ...cookieConfig,
   };
 
-  const debug = reduxWrapperConfig.debug || false;
+  const debug = reduxWrapperConfig.debug ?? false;
 
   const extractStateFromCookies = async (req: IncomingMessage, res: ServerResponse) => {
     // @ts-ignore https://github.com/ScottHamper/Cookies/pull/83
@@ -86,7 +86,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
 
     // Removing the state's _persist key for the server-side (non-persisted) redux store
     if (state && typeof state._persist !== "undefined") {
-      const { _persist, ...cleanedState } = state;
+      const {_persist, ...cleanedState} = state;
       state = cleanedState;
     }
 
@@ -94,7 +94,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
   };
 
   // Used internally by flushReduxStateToCookies()
-  const createPersistor = (store: Store): Promise<Persistor> =>
+  const createPersistor = async (store: Store): Promise<Persistor> =>
     new Promise((resolve) => {
       const persistor = persistStore(store, {}, () => {
         resolve(persistor);
@@ -110,6 +110,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
             "in your app's getInitialProps() method. Ignoring the call."
         );
       }
+
       return;
     }
 
@@ -122,7 +123,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
     const cookies = new NodeCookiesWrapper(new ServerCookies(this.req, this.res));
     const persistConfig = {
       ...sharedPersistConfig,
-      blacklist: sharedPersistConfig.blacklist!.concat(["_persist"]),
+      blacklist: [...sharedPersistConfig.blacklist, "_persist"],
       storage: new CookieStorage(cookies, {
         ...sharedCookieConfig,
         setCookieOptions: {
@@ -146,7 +147,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
 
     /* istanbul ignore if */
     if (debug) {
-      console.log("State flushed to cookies: ", store.getState());
+      console.log("State flushed to cookies:", store.getState());
     }
   }
 
@@ -167,7 +168,9 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
       // Note: We do not create a persistor here because we need no rehydration.
       // See https://github.com/rt2zz/redux-persist/issues/457#issuecomment-362490893 for the idea
       const persistoid = createPersistoid(persistConfig);
-      store.subscribe(() => persistoid.update(store.getState()));
+      store.subscribe(() => {
+        persistoid.update(store.getState());
+      });
     }
 
     return store;
@@ -186,6 +189,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
           if (debug) {
             console.log("0. Extracting state from cookies (if any)");
           }
+
           const state = await extractStateFromCookies(appCtx.ctx.req, appCtx.ctx.res);
           /* istanbul ignore if */
           if (debug) {
@@ -199,7 +203,7 @@ export const withReduxCookiePersist = (makeStore: MakeStore, config?: Config) =>
 
         appCtx.ctx.flushReduxStateToCookies = flushReduxStateToCookies;
 
-        return await WrappedApp.getInitialProps(appCtx);
+        return WrappedApp.getInitialProps(appCtx);
       };
 
       public render() {

@@ -25,6 +25,9 @@ jobs:
       - name: Check types
         run: npm run tsc
 
+      - name: Lint
+        run: npm run lint
+
       - name: Run tests
         run: npm run test -- --ci --coverage --maxWorkers=2
 

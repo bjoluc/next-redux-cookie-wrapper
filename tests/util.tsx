@@ -1,19 +1,23 @@
-import { ReduxWrapperAppProps } from "next-redux-wrapper";
-import App, { AppContext } from "next/app";
+import {ReduxWrapperAppProps} from "next-redux-wrapper";
+import App, {AppContext} from "next/app";
 import React from "react";
 import renderer from "react-test-renderer";
-import { AnyAction, createStore } from "redux";
+import {Reducer, createStore} from "redux";
 
 // Based on the next-redux-wrapper tests
 
 export interface State {
-  reduxStatus: "init" | "custom";
+  reduxStatus: string;
 }
 
-export const reducer = (state: State = { reduxStatus: "init" }, action: AnyAction) => {
+export const reducer: Reducer<State> = (state, action) => {
+  if (typeof state === "undefined") {
+    state = {reduxStatus: "init"};
+  }
+
   switch (action.type) {
     case "ACTION":
-      return { reduxStatus: action.payload };
+      return {reduxStatus: action.payload as string};
     default:
       return state;
   }
@@ -23,7 +27,7 @@ export const makeStore = (initialState: State) => createStore(reducer, initialSt
 
 class BaseApp extends App<ReduxWrapperAppProps<State>> {
   public render() {
-    const { store, ...props } = this.props;
+    const {store, ...props} = this.props;
     return (
       <div>
         {JSON.stringify(props)}
@@ -34,24 +38,24 @@ class BaseApp extends App<ReduxWrapperAppProps<State>> {
 }
 
 export class PlainApp extends BaseApp {
-  public static async getInitialProps({ ctx: _ctx }: AppContext) {
-    return { custom: "custom", pageProps: {} };
+  public static async getInitialProps({ctx: _ctx}: AppContext) {
+    return {custom: "custom", pageProps: {}};
   }
 }
 
 export class StoreApp extends BaseApp {
-  public static async getInitialProps({ ctx }: AppContext) {
-    ctx.store.dispatch({ type: "ACTION", payload: "foo" });
-    return { custom: "custom", pageProps: {} };
+  public static async getInitialProps({ctx}: AppContext) {
+    ctx.store.dispatch({type: "ACTION", payload: "foo"});
+    return {custom: "custom", pageProps: {}};
   }
 }
 
 // Like StoreApp, but uses flushReduxStateToCookies
 export class FlushStateStorePage extends BaseApp {
-  public static async getInitialProps({ ctx }: AppContext) {
-    ctx.store.dispatch({ type: "ACTION", payload: "foo" });
+  public static async getInitialProps({ctx}: AppContext) {
+    ctx.store.dispatch({type: "ACTION", payload: "foo"});
     await ctx.flushReduxStateToCookies();
-    return { custom: "custom", pageProps: {} };
+    return {custom: "custom", pageProps: {}};
   }
 }
 

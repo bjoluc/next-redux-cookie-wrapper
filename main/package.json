@@ -77,8 +77,5 @@
 			"path": "dist/next-redux-cookie-wrapper.esm.js",
 			"limit": "12 KB"
 		}
-	],
-	"release": {
-		"extends": "@bjoluc/semantic-release-config-npm"
-	}
+	]
 }

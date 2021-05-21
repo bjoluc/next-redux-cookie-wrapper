@@ -38,7 +38,7 @@
 		"useTabs": true
 	},
 	"importSort": {
-		".ts, .tsx": {
+		".ts, .tsx, .js": {
 			"style": "module",
 			"parser": "typescript"
 		}

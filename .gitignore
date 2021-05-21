@@ -3,4 +3,4 @@ dist
 docs
 coverage
 .vscode
-.cache
+main/README.md

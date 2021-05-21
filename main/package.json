@@ -24,7 +24,8 @@
 		"size": "size-limit",
 		"analyze": "size-limit --why",
 		"prepare": "npm run build",
-		"release": "semantic-release"
+		"release": "semantic-release",
+		"prepack": "cp ../README.md ."
 	},
 	"repository": {
 		"type": "git",

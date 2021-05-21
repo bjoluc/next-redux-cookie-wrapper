@@ -1,0 +1,7 @@
+{
+	"entryPoints": ["main/src/index.ts"],
+	"out": "docs",
+	"tsconfig": "main/tsconfig.json",
+	"includeVersion": true,
+	"theme": "minimal"
+}

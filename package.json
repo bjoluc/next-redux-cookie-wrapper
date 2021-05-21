@@ -1,162 +1,97 @@
 {
-  "name": "next-redux-cookie-wrapper",
-  "version": "1.1.4",
-  "description": "Use redux-persist and redux-persist-cookie-storage in Next.js – with ease",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "engines": {
-    "node": ">=12"
-  },
-  "source": "src/index.tsx",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "start": "tsdx watch",
-    "test": "tsdx test --passWithNoTests --detectOpenHandles",
-    "test:watch": "npm run test -- --watch",
-    "tsc": "tsc --noEmit",
-    "lint": "xo",
-    "build": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
-    "commit": "git-cz",
-    "prepare": "tsdx build && husky install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bjoluc/next-redux-cookie-wrapper.git"
-  },
-  "author": "bjoluc <mail@bjoluc.de>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/bjoluc/next-redux-cookie-wrapper/issues"
-  },
-  "homepage": "https://github.com/bjoluc/next-redux-cookie-wrapper#readme",
-  "dependencies": {
-    "cookies": "0.8.0",
-    "cookies-js": "1.2.3",
-    "redux-persist": "6.0.0",
-    "redux-persist-cookie-storage": "1.0.0",
-    "type-fest": "^0.18.1"
-  },
-  "peerDependencies": {
-    "next": ">=9.0",
-    "react": ">=16"
-  },
-  "devDependencies": {
-    "@bjoluc/semantic-release-config-npm": "^1.0.1",
-    "@commitlint/cli": "12.1.4",
-    "@commitlint/config-conventional": "^12.1.4",
-    "@size-limit/preset-small-lib": "^4.10.2",
-    "@types/cookies": "^0.7.6",
-    "@types/jest": "^26.0.23",
-    "@types/node": "15.0.3",
-    "@types/react": "17.0.5",
-    "@types/react-dom": "^17.0.5",
-    "@types/react-test-renderer": "17.0.1",
-    "commitizen": "^4.2.4",
-    "conventional-changelog-conventionalcommits": "^4.6.0",
-    "cz-conventional-changelog": "3.3.0",
-    "delay": "5.0.0",
-    "eslint-config-xo": "^0.35.0",
-    "eslint-config-xo-react": "^0.24.0",
-    "eslint-plugin-react": "^7.23.2",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^6.0.0",
-    "import-sort-style-module": "6.0.0",
-    "lint-staged": "11.0.0",
-    "next": "^10.0.5",
-    "next-redux-wrapper": "^5.0.0",
-    "node-mocks-http": "1.10.1",
-    "prettier": "2.3.0",
-    "prettier-plugin-import-sort": "0.0.6",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-test-renderer": "17.0.2",
-    "redux": "4.1.0",
-    "semantic-release": "^17.4.3",
-    "size-limit": "^4.10.2",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.2.0",
-    "typescript": "^4.2.4",
-    "xo": "^0.38.2"
-  },
-  "browser": {
-    "cookies": false
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "printWidth": 100,
-    "singleQuote": false
-  },
-  "importSort": {
-    ".ts, .tsx": {
-      "style": "module",
-      "parser": "typescript"
-    }
-  },
-  "xo": {
-    "extends": "xo-react",
-    "prettier": true,
-    "rules": {
-      "unicorn/prevent-abbreviations": "off",
-      "max-nested-callbacks": [
-        1,
-        5
-      ],
-      "@typescript-eslint/prefer-ts-expect-error": "off",
-      "@typescript-eslint/no-implicit-any-catch": "off"
-    }
-  },
-  "lint-staged": {
-    "{src,tests}/**/*.ts(x)": [
-      "xo --fix"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog",
-      "disableScopeLowerCase": true,
-      "disableSubjectLowerCase": true
-    }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "subject-case": [
-        2,
-        "always",
-        [
-          "sentence-case"
-        ]
-      ],
-      "scope-case": [
-        1,
-        "never",
-        [
-          "lower-case"
-        ]
-      ]
-    }
-  },
-  "release": {
-    "extends": "@bjoluc/semantic-release-config-npm"
-  },
-  "size-limit": [
-    {
-      "path": "dist/next-redux-cookie-wrapper.cjs.production.min.js",
-      "limit": "11 KB"
-    },
-    {
-      "path": "dist/next-redux-cookie-wrapper.esm.js",
-      "limit": "10 KB"
-    }
-  ]
+	"name": "root",
+	"private": true,
+	"workspaces": [
+		"main",
+		"demo"
+	],
+	"scripts": {
+		"lint": "xo",
+		"commit": "git-cz",
+		"prepare": "husky install && npm run build --workspace=main",
+		"docs": "typedoc",
+		"docs:watch": "npm run docs -- --watch",
+		"add": "npm install --package-lock-only --no-package-lock --prefix",
+		"postadd": "npm install"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "12.1.4",
+		"@commitlint/config-conventional": "^12.1.4",
+		"commitizen": "^4.2.4",
+		"cz-conventional-changelog": "3.3.0",
+		"eslint-config-xo": "^0.35.0",
+		"eslint-config-xo-react": "^0.24.0",
+		"eslint-plugin-react": "^7.23.2",
+		"eslint-plugin-react-hooks": "^4.2.0",
+		"husky": "^6.0.0",
+		"import-sort-style-module": "6.0.0",
+		"lint-staged": "11.0.0",
+		"prettier": "2.3.0",
+		"prettier-plugin-import-sort": "0.0.6",
+		"typedoc": "^0.20.36",
+		"xo": "^0.38.2"
+	},
+	"prettier": {
+		"trailingComma": "es5",
+		"printWidth": 100,
+		"singleQuote": false,
+		"useTabs": true
+	},
+	"importSort": {
+		".ts, .tsx": {
+			"style": "module",
+			"parser": "typescript"
+		}
+	},
+	"xo": {
+		"extends": "xo-react",
+		"prettier": true,
+		"rules": {
+			"unicorn/prevent-abbreviations": [
+				"error",
+				{
+					"replacements": {
+						"res": false,
+						"props": false,
+						"env": false
+					}
+				}
+			],
+			"@typescript-eslint/prefer-ts-expect-error": "off",
+			"@typescript-eslint/no-implicit-any-catch": "off"
+		}
+	},
+	"lint-staged": {
+		"{src,tests}/**/*.ts(x)": [
+			"xo --fix"
+		]
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog",
+			"disableScopeLowerCase": true,
+			"disableSubjectLowerCase": true
+		}
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		],
+		"rules": {
+			"subject-case": [
+				2,
+				"always",
+				[
+					"sentence-case"
+				]
+			],
+			"scope-case": [
+				1,
+				"never",
+				[
+					"lower-case"
+				]
+			]
+		}
+	}
 }

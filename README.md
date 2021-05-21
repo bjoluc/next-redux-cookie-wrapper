@@ -4,162 +4,105 @@
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bjoluc/next-redux-cookie-wrapper/build)](https://github.com/bjoluc/next-redux-cookie-wrapper/actions)
 [![codecov](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper/branch/master/graph/badge.svg)](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-A drop-in replacement for [next-redux-wrapper v5](https://github.com/kirill-konshin/next-redux-wrapper/tree/5.x) that adds [Redux Persist](https://github.com/rt2zz/redux-persist) with [redux-persist-cookie-storage](https://github.com/abersager/redux-persist-cookie-storage) to the equipment list – configured out of the box.
+A [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper/) extension to sync a subset of a client's [Redux](https://redux.js.org/) state with cookies such that it survives page reloads and is available to the server during SSR :cookie: :sparkles:
 
 ## Motivation
 
-[Next.js](https://nextjs.org/) is great.
-[Redux](https://redux.js.org/) is great.
-[Redux Persist](https://github.com/rt2zz/redux-persist) allows to persist a Redux store's state across page loads.
-When a page is loaded it merges any incoming state with the state from a previously saved version (if any).
-What should the client display until the states have been merged (or, in Redux Persist speak, the store has been rehydrated)?
-Redux Persist offers a `PersistGate` React component for this which delays the rendering of its children until the store has been rehydrated.
+When it comes to Redux state persistance, [Redux Persist](https://github.com/rt2zz/redux-persist) is a popular choice.
+With Next.js, however, the persisted state is (without further ado) not available during SSR.
+Hence, the first render on the client side may largely differ from the server-rendered markup.
+A solution to this is a storage method that is available to both the server and the client by default: Cookies.
 
-But wait!
-We are using Next.js with great server-side rendering capabilities.
-We do not want to throw those away with a `PersistGate`, do we?
-Too bad that the server is not aware of the client's state.
-Otherwise, it could pre-render the page exactly as it will be rendered on the client side after rehydration has taken place.
-
-There is, however, a Redux Persist storage adapter called [redux-persist-cookie-storage](https://github.com/abersager/redux-persist-cookie-storage).
-It simply stores the Redux state in a cookie which is – by its nature – sent to the server with any request.
-Beautiful, now the client's redux state is available to the server during SSR!
-
-You are probably already using (or have heard of) [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper), an easy-to-use HOC to embed Redux into Next.js projects.
-This library is nothing but a drop-in replacement for next-redux-wrapper version 5 that adds Redux Persist and redux-persist-cookie-storage – beautifully set up and configured to save you a day (or two – I will not tell how long it took me to get this right :smile:) of work!
+This library started as a drop-in replacement for [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper/) that built upon Redux Persist and a [storage adapter for cookies](https://github.com/abersager/redux-persist-cookie-storage).
+However, in response to `getStaticProps()` and `getServerSideProps()` being introduced in Next.js, this library has been rewritten and the tooling has been simplified significantly.
+What remains is a single Redux middleware and a tiny wrapper around the `makeStore()` function.
 
 ## How does it work?
 
-This is in fact... yeah, a wrapper around next-redux-wrapper.
-But don't be afraid, it feels just like next-redux-wrapper, only extended by some optional config options (namely `persistConfig` and `cookieConfig`).
-Let's get into it!
+On the server, a wrapper around `makeStore()` passes the Next.js context to the middleware via an action.
+The middleware then reads the cookies and dispatches an initial `HYDRATE` action with the client's state.
+On server-side state changes, `set-cookie` headers are set to update the client's cookies.
+
+Similarly, the client updates cookies whenever a relevant portion of the state changes.
+Moreover, the `HYDRATE` action is intercepted on the client and the configured state subtrees are (by default) parsed from the cookies instead of the retrieved JSON data.
+This way, incoming state updates from `getStaticProps()` do not overwrite the synced state subtrees.
+You can opt out of this behavior on a per-state-subtree basis and instead always receive the server's state in the `HYDRATE` reducer if you wish to handle state portions from `getStaticProps()` on your own.
+
+Some words about compression:
+The serialized cookie state is compressed using [lz-string](https://github.com/pieroxy/lz-string) to keep the cookie size small.
+Currently, there is no way to disable compression.
+If you would like to see one implemented, please let me know.
 
 ## Setup
 
+> **TL;DR**
+>
+> For a quick working example, check out the demo project in this repository.
+> It uses [Redux Toolkit](https://redux-toolkit.js.org/) but that should not discourage you.
+>  * Clone the repository
+>  * Make sure you have npm 7 installed (`npm i -g npm@7`; required for the workspaces feature)
+>  * Run `npm install` in the root directory
+>  * `cd demo && npm start`
+>  * Inspect the setup in [`store.ts`](https://github.com/bjoluc/next-redux-cookie-wrapper/tree/main/demo/store.ts)
+
+If you do not have next-redux-wrapper set up, follow their [installation instructions](https://github.com/kirill-konshin/next-redux-wrapper/#installation).
+Afterwards, install `next-redux-cookie-wrapper`:
 ```
 npm install --save next-redux-cookie-wrapper
 ```
 
-If you do not have next-redux-wrapper set up, follow their [installation instructions for version 5](https://github.com/kirill-konshin/next-redux-wrapper/tree/5.x#installation) (except the `npm install` step).
-Note, that next-redux-cookie-wrapper is a drop-in replacement for next-redux-wrapper at version 5, and version 6 is not supported at the moment (see https://github.com/bjoluc/next-redux-cookie-wrapper/issues/5#issuecomment-622057894 for details).
-With next-redux-wrapper v5 in place, go ahead and in `pages/_app.js`:
+and configure your store to use `nextReduxCookieMiddleware` by passing it to `createStore()` and wrapping your `makeStore()` function with `wrapMakeStore()`:
 
 ```diff
-- import withRedux from "next-redux-wrapper";
-+ import { withReduxCookiePersist } from "next-redux-cookie-wrapper";
++	import {nextReduxCookieMiddleware, wrapMakeStore} from "next-redux-cookie-wrapper";
 
 ...
 
--export default withRedux(makeStore)(MyApp);
-+export default withReduxCookiePersist(makeStore)(MyApp);
+-	const makeStore = () => createStore(reducer);
++	const makeStore = wrapMakeStore(() =>
++		createStore(
++			reducer,
++			applyMiddleware(
++				nextReduxCookieMiddleware({
++					subtrees: ["my.subtree"],
++				})
++			)
++		)
++	);
 ```
 
-To validate that it works, reload one of your app's pages and take some actions that modify the Redux store's state.
-When you reload the page again, the state changes should be preserved.
-If not, head on to [Debugging](#debugging).
+That's it! The state of `my.subtree` should now be synced with a cookie called `my.subtree` and available on the server during SSR.
+If not, you can set the debug flag of `next-redux-wrapper` to `true` to get some insights on the state:
+
+```ts
+export const wrapper = createWrapper<AppStore>(makeStore, {debug: true});
+```
+
+### Usage with Redux Toolkit
+
+When using [Redux Toolkit](https://redux-toolkit.js.org/), it is important that `nextReduxCookieMiddleware` is used before any of the default middlewares:
+
+```ts
+const makeStore = wrapMakeStore(() =>
+	configureStore({
+		reducer: {...},
+		middleware: (getDefaultMiddleware) =>
+			getDefaultMiddleware().prepend(
+				nextReduxCookieMiddleware({
+					subtrees: ["my.subtree"],
+				})
+			),
+	})
+);
+```
+
+The reason for this is that Redux Toolkit by default adds a [serializability middleware](https://redux-toolkit.js.org/api/serializabilityMiddleware) that would complain about the `SERVE_COOKIES` action which `wrapMakeStore()` uses to pass the Next.js context to `nextReduxCookieMiddleware`.
+When `nextReduxCookieMiddleware` is invoked before the serializability middleware, it catches the `SERVE_COOKIES` action before it reaches any later middleware.
+Alternatively, you can also configure the serializability middleware to ignore the `SERVE_COOKIES` action, should you prefer that.
 
 ## Configuration
 
-The optional second parameter of `withReduxCookiePersist` accepts the same [config object](https://github.com/kirill-konshin/next-redux-wrapper#how-it-works) as next-redux-wrapper's `withStore`.
-In addition to the next-redux-wrapper config options the following options are supported:
-
-### persistConfig
-
-A configuration object that is passed on to Redux Persist.
-You can check out their [API docs](https://github.com/rt2zz/redux-persist/blob/master/docs/api.md#type-persistconfig) for a list of available options.
-If no `key` attribute is provided, "root" will be used.
-
-A frequent example for the `persistConfig` key is whitelisting or blacklisting of Redux state keys to specify which keys shall be persisted:
-
-```js
-export default withReduxCookiePersist(makeStore, {
-  persistConfig: {
-    whitelist: ["toBePersisted"],
-  },
-})(MyApp);
-```
-
-You should aim to persist as little state as possible because the cookies' Redux state is included in every request and cookies have a size limit.
-
-### cookieConfig
-
-The [configuration options](https://github.com/abersager/redux-persist-cookie-storage#options) passed to redux-persist-cookie-storage.
-For example, if you want to specify a path and an expiration time:
-
-```js
-export default withReduxCookiePersist(makeStore, {
-  cookieConfig: {
-    setCookieOptions: {
-      path: "/mypath",
-    },
-    expiration: {
-      "default": 365 * 86400, // Cookies expire after one year
-    }
-  },
-})(MyApp);
-```
-
-## Debugging
-
-next-redux-wrapper accepts a `debug` flag.
-Use it to see what happens under the hood:
-
-```js
-export default withReduxCookiePersist(makeStore, {
-  debug: true,
-})(MyApp);
-```
-
-next-redux-cookie-wrapper also adds debugging output when the `debug` flag is set.
-
-## Usage with Redux Saga
-
-Check out [next-redux-saga](https://github.com/bmealhouse/next-redux-saga).
-You will have to modify your makeStore function to configure a saga middleware and make it run the root saga.
-Afterwards,
-
-```js
-export default withReduxCookiePersist(makeStore)(withReduxSaga(MyApp))
-```
-
-will do the job!
-
-## Redirecting in `getInitialProps()`
-
-There may be situations in which you want to redirect the client in `getInitialProps()`.
-You may also dispatch actions in `getInitialProps()`.
-However, when you redirect after having modified the store's state you effectively loose any state modifications because the modified state is not transferred to the client (state is regularly transferred via Next.js' initialProps).
-To help avoiding this, next-redux-cookie-wrapper adds a `flushReduxStateToCookies()` method to the page context.
-It sets a cookie header on the response object, updating the client's cookies with the modified state.
-Hence, when the client follows the redirect it will provide the up-to-date state cookies to the server.
-
-Example usage in a page component:
-
-```js
-import { createMyAction } from "../lib/store/actions";
-import React from 'react'
-import Router from 'next/router'
-
-export default class extends React.Component {
-  static async getInitialProps(ctx) {
-    ctx.store.dispatch(createMyAction())
-
-    if (ctx.res) {
-      // Server-side redirect
-      ctx.flushReduxStateToCookies()
-      ctx.res.writeHead(302, {
-        Location: '/about'
-      })
-      ctx.res.end()
-    } else {
-      // Client-side redirect
-      Router.push('/about')
-    }
-
-    return {}
-  }
-}
-```
+For the configuration options of `nextReduxCookieMiddleware`, please refer to [the API documentation](https://next-redux-cookie-wrapper.js.org/interfaces/nextreduxcookiemiddlewareconfig.html).

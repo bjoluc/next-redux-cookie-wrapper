@@ -1,0 +1,84 @@
+{
+	"name": "next-redux-cookie-wrapper",
+	"version": "1.1.4",
+	"description": "Use redux-persist and redux-persist-cookie-storage in Next.js – with ease",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"src"
+	],
+	"engines": {
+		"node": ">=12"
+	},
+	"source": "src/index.ts",
+	"directories": {
+		"test": "tests"
+	},
+	"scripts": {
+		"start": "tsdx watch",
+		"test": "tsdx test --passWithNoTests --coverage",
+		"test:watch": "npm run test -- --watch",
+		"tsc": "tsc",
+		"build": "tsdx build",
+		"size": "size-limit",
+		"analyze": "size-limit --why",
+		"prepare": "npm run build",
+		"release": "semantic-release"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bjoluc/next-redux-cookie-wrapper.git"
+	},
+	"author": "bjoluc <mail@bjoluc.de>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/bjoluc/next-redux-cookie-wrapper/issues"
+	},
+	"homepage": "https://github.com/bjoluc/next-redux-cookie-wrapper#readme",
+	"dependencies": {
+		"@types/cookie": "^0.4.0",
+		"cookie": "^0.4.1",
+		"fast-deep-equal": "^3.1.3",
+		"immer": "^9.0.2",
+		"lodash": "^4.17.21",
+		"lodash-es": "^4.17.21",
+		"lz-string": "github:pieroxy/lz-string#b2e0b27",
+		"nookies": "^2.5.2",
+		"type-fest": "^1.1.3"
+	},
+	"peerDependencies": {
+		"next-redux-wrapper": ">=6"
+	},
+	"devDependencies": {
+		"@bjoluc/semantic-release-config-npm": "^1.0.1",
+		"@size-limit/preset-small-lib": "^4.10.3",
+		"@types/jest": "^26.0.23",
+		"@types/lodash": "^4.14.169",
+		"@types/node": "15.3.1",
+		"@types/set-cookie-parser": "^2.4.0",
+		"next": "^10.2.2",
+		"next-redux-wrapper": "7.0.0-rc.2",
+		"node-mocks-http": "1.10.1",
+		"redux": "4.1.0",
+		"semantic-release": "^17.4.3",
+		"set-cookie-parser": "^2.4.8",
+		"size-limit": "^4.10.3",
+		"tsdx": "^0.14.1",
+		"tslib": "^2.2.0",
+		"typescript": "^4.2.4"
+	},
+	"size-limit": [
+		{
+			"path": "dist/next-redux-cookie-wrapper.cjs.production.min.js",
+			"limit": "14 KB"
+		},
+		{
+			"path": "dist/next-redux-cookie-wrapper.esm.js",
+			"limit": "12 KB"
+		}
+	],
+	"release": {
+		"extends": "@bjoluc/semantic-release-config-npm"
+	}
+}

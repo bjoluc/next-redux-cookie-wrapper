@@ -28,7 +28,7 @@ On server-side state changes, `set-cookie` headers are set to update the client'
 
 Similarly, the client updates cookies whenever a relevant portion of the state changes.
 Moreover, the `HYDRATE` action is intercepted on the client and the configured state subtrees are (by default) parsed from the cookies instead of the retrieved JSON data.
-This way, incoming state updates from `getStaticProps()` do not overwrite the synced state subtrees.
+This way, incoming state updates from `getStaticProps()` do not overwrite the synced state subtrees as `getStaticProps()` does not update the cookies.
 You can opt out of this behavior on a per-state-subtree basis and instead always receive the server's state in the `HYDRATE` reducer if you wish to handle state portions from `getStaticProps()` on your own.
 
 Some words about compression:
@@ -57,21 +57,21 @@ npm install --save next-redux-cookie-wrapper
 and configure your store to use `nextReduxCookieMiddleware` by passing it to `createStore()` and wrapping your `makeStore()` function with `wrapMakeStore()`:
 
 ```diff
-+	import {nextReduxCookieMiddleware, wrapMakeStore} from "next-redux-cookie-wrapper";
++ import {nextReduxCookieMiddleware, wrapMakeStore} from "next-redux-cookie-wrapper";
 
 ...
 
 -	const makeStore = () => createStore(reducer);
-+	const makeStore = wrapMakeStore(() =>
-+		createStore(
-+			reducer,
-+			applyMiddleware(
-+				nextReduxCookieMiddleware({
-+					subtrees: ["my.subtree"],
-+				})
-+			)
-+		)
-+	);
++ const makeStore = wrapMakeStore(() =>
++   createStore(
++     reducer,
++     applyMiddleware(
++       nextReduxCookieMiddleware({
++         subtrees: ["my.subtree"],
++       })
++     )
++   )
++ );
 ```
 
 That's it! The state of `my.subtree` should now be synced with a cookie called `my.subtree` and available on the server during SSR.
@@ -87,15 +87,15 @@ When using [Redux Toolkit](https://redux-toolkit.js.org/), it is important that 
 
 ```ts
 const makeStore = wrapMakeStore(() =>
-	configureStore({
-		reducer: {...},
-		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware().prepend(
-				nextReduxCookieMiddleware({
-					subtrees: ["my.subtree"],
-				})
-			),
-	})
+  configureStore({
+    reducer: {...},
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().prepend(
+        nextReduxCookieMiddleware({
+          subtrees: ["my.subtree"],
+        })
+      ),
+  })
 );
 ```
 

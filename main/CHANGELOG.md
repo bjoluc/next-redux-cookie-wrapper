@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.1.4...v2.0.0) (2021-05-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* This release is a full rewrite that drops Redux Persist and uses a custom
+middleware instead. next-redux-cookie-wrapper is no longer a drop-in replacement for
+next-redux-wrapper now but rather an extension to it, namely a Redux middleware to be used with
+next-redux-wrapper. Hence, the API of v2 has fully changed since v1. Please follow the setup
+instructions in the readme to set up v2 in your project.
+
+### Features
+
+* Support next-redux-wrapper v6 and v7 ([e6ad7e5](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/e6ad7e5aec6e3f218479182909b7b1e7cf341eaa)), closes [#13](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/13)
+
 ### [1.1.4](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v1.1.3...v1.1.4) (2021-01-27)
 
 

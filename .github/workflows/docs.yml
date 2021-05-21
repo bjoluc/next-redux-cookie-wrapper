@@ -1,6 +1,9 @@
 name: docs
 
-on: release
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
 
 env:
   HUSKY: 0
@@ -24,7 +27,6 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
-        if: github.repository_owner == 'bjoluc' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs

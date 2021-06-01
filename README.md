@@ -61,7 +61,7 @@ and configure your store to use `nextReduxCookieMiddleware` by passing it to `cr
 
 ...
 
--	const makeStore = () => createStore(reducer);
+- const makeStore = () => createStore(reducer);
 + const makeStore = wrapMakeStore(() =>
 +   createStore(
 +     reducer,

@@ -10,9 +10,7 @@
 		"commit": "git-cz",
 		"prepare": "husky install && npm run build --workspace=main",
 		"docs": "typedoc",
-		"docs:watch": "npm run docs -- --watch",
-		"add": "npm install --package-lock-only --no-package-lock --prefix",
-		"postadd": "npm install"
+		"docs:watch": "npm run docs -- --watch"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "12.1.4",

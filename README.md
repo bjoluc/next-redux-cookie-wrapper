@@ -100,7 +100,7 @@ const makeStore = wrapMakeStore(() =>
 ```
 
 The reason for this is that Redux Toolkit by default adds a [serializability middleware](https://redux-toolkit.js.org/api/serializabilityMiddleware) that would complain about the `SERVE_COOKIES` action which `wrapMakeStore()` uses to pass the Next.js context to `nextReduxCookieMiddleware`.
-When `nextReduxCookieMiddleware` is invoked before the serializability middleware, it catches the `SERVE_COOKIES` action before it reaches any later middleware.
+When `nextReduxCookieMiddleware` is invoked before the serializability middleware, it catches the `SERVE_COOKIES` action before it reaches that middleware.
 Alternatively, you can also configure the serializability middleware to ignore the `SERVE_COOKIES` action, should you prefer that.
 
 ## Configuration

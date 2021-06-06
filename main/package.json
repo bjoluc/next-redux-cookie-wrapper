@@ -1,7 +1,7 @@
 {
 	"name": "next-redux-cookie-wrapper",
 	"version": "2.0.1",
-	"description": "Use redux-persist and redux-persist-cookie-storage in Next.js – with ease",
+	"description": "Sync a subset of your Redux state with cookies in Next.js 🍪 ✨",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",
 	"files": [

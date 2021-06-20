@@ -11,7 +11,7 @@ A [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper/) ex
 
 ## Motivation
 
-When it comes to Redux state persistance, [Redux Persist](https://github.com/rt2zz/redux-persist) is a popular choice.
+When it comes to Redux state persistence, [Redux Persist](https://github.com/rt2zz/redux-persist) is a popular choice.
 With Next.js, however, the persisted state is (without further ado) not available during SSR.
 Hence, the first render on the client side may largely differ from the server-rendered markup.
 A solution to this is a storage method that is available to both the server and the client by default: Cookies.

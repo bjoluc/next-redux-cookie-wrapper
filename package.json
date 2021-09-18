@@ -13,20 +13,20 @@
 		"docs:watch": "npm run docs -- --watch"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "12.1.4",
-		"@commitlint/config-conventional": "^12.1.4",
+		"@commitlint/cli": "13.1.0",
+		"@commitlint/config-conventional": "^13.1.0",
 		"commitizen": "^4.2.4",
 		"cz-conventional-changelog": "3.3.0",
 		"eslint-config-xo": "^0.35.0",
 		"eslint-config-xo-react": "^0.24.0",
 		"eslint-plugin-react": "^7.23.2",
 		"eslint-plugin-react-hooks": "^4.2.0",
-		"husky": "^6.0.0",
+		"husky": "^7.0.2",
 		"import-sort-style-module": "6.0.0",
-		"lint-staged": "11.0.0",
-		"prettier": "2.3.0",
-		"prettier-plugin-import-sort": "0.0.6",
-		"typedoc": "^0.20.36",
+		"lint-staged": "11.1.2",
+		"prettier": "2.4.1",
+		"prettier-plugin-import-sort": "0.0.7",
+		"typedoc": "^0.22.3",
 		"xo": "^0.38.2"
 	},
 	"prettier": {

@@ -31,6 +31,7 @@ export const walkState = <State extends JsonObject>(
 	stateA: State,
 	stateB?: State
 ) =>
+	// @ts-ignore https://github.com/immerjs/immer/issues/839
 	produce(stateA, (draftState) => {
 		for (const subtreeConfig of subtrees) {
 			const {subtree} = subtreeConfig;

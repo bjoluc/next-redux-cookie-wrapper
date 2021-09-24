@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.0.1...v2.1.0) (2021-09-24)
+
+
+### Features
+
+* Implement configuration option to disable compression ([2cda67c](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/2cda67c06e78735918b0075c93a8f9b9df44e23b)), closes [#18](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/18)
+
 ### [2.0.1](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.0.0...v2.0.1) (2021-05-21)
 
 

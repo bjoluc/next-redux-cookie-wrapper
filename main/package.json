@@ -1,6 +1,6 @@
 {
 	"name": "next-redux-cookie-wrapper",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"description": "Sync a subset of your Redux state with cookies in Next.js 🍪 ✨",
 	"main": "dist/index.js",
 	"typings": "dist/index.d.ts",

@@ -1,11 +1,13 @@
-import {DefaultedSubtreeConfig} from "../src/config";
+import {InternalSubtreeConfig} from "../src/config";
 import {walkState} from "../src/state-walker";
 
 describe("walkState()", () => {
-	const subtrees: DefaultedSubtreeConfig[] = ["one", "two", "two.three"].map((path) => ({
+	const subtrees: InternalSubtreeConfig[] = ["one", "two", "two.three"].map((path) => ({
 		subtree: path,
 		cookieName: path,
 		ignoreStateFromStaticProps: true,
+		compress: true,
+		cookieOptions: {},
 	}));
 
 	it("should invoke the walker function for each `SubtreeConfig` object", () => {

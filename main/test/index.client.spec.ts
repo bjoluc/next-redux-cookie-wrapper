@@ -51,14 +51,21 @@ describe("nextReduxCookieMiddleware() on the client", () => {
 		],
 	};
 
-	const cookieOptionsMatcher = expect.objectContaining({secure: config.secure});
-
-	it("should create a StateCookies object and provide the cookie names to it", () => {
+	it("should create a StateCookies object and provide the cookie configurations to it", () => {
 		createMiddlewareTestFunctions(config);
 		const stateCookies = getStateCookiesInstance();
 
-		// The middleware should have called `stateCookies.setAllNames()`.
-		expect(stateCookies.setAllNames).toHaveBeenCalledWith(["cookie1", "cookie2"]);
+		// The middleware should have called `stateCookies.setConfigurations()`.
+		expect(stateCookies.setConfigurations).toHaveBeenCalledWith([
+			expect.objectContaining({
+				cookieName: "cookie1",
+				cookieOptions: expect.objectContaining({secure: true}),
+			}),
+			expect.objectContaining({
+				cookieName: "cookie2",
+				cookieOptions: expect.objectContaining({secure: true}),
+			}),
+		]);
 	});
 
 	it("should intercept the HYDRATE action and modify its payload accordingly", () => {
@@ -107,7 +114,7 @@ describe("nextReduxCookieMiddleware() on the client", () => {
 
 		// The middleware should have updated (only) cookie2
 		expect(stateCookies.set).toHaveBeenCalledTimes(1);
-		expect(stateCookies.set).toHaveBeenCalledWith("cookie2", {it: "changed"}, cookieOptionsMatcher);
+		expect(stateCookies.set).toHaveBeenCalledWith("cookie2", {it: "changed"});
 		stateCookies.set.mockReset();
 
 		// Just to be sure: Simulate a HYDRATE action that modifies the state
@@ -119,11 +126,9 @@ describe("nextReduxCookieMiddleware() on the client", () => {
 
 		// The middleware should have updated both cookies
 		expect(stateCookies.set).toHaveBeenCalledTimes(2);
-		expect(stateCookies.set.mock.calls).toEqual(
-			expect.arrayContaining([
-				["cookie1", "incoming1", cookieOptionsMatcher],
-				["cookie2", "incoming2", cookieOptionsMatcher],
-			])
-		);
+		expect(stateCookies.set.mock.calls).toEqual([
+			["cookie1", "incoming1"],
+			["cookie2", "incoming2"],
+		]);
 	});
 });

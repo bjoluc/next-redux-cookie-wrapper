@@ -4,6 +4,7 @@
 
 import {ServerResponse} from "http";
 
+import {compressToEncodedURIComponent} from "lz-string";
 import {createMocks} from "node-mocks-http";
 import {parse} from "set-cookie-parser";
 
@@ -32,20 +33,28 @@ describe("StateCookies on the server", () => {
 
 	it("should be able to set and get cookies", () => {
 		const cookies = new StateCookies(context);
+		cookies.setConfigurations([
+			{cookieName: "cookie1", compress: true, cookieOptions: {}},
+			{cookieName: "cookie2", compress: false, cookieOptions: {path: "/"}},
+		]);
 
-		cookies.set("name1", {my: {fancy: "state"}}, {});
-		cookies.set("name2", {second: "state"}, {path: "/"});
+		const cookie1 = {my: {fancy: "state"}};
+		const cookie2 = {second: "state"};
+		cookies.set("cookie1", cookie1);
+		cookies.set("cookie2", cookie2);
 
 		// Parse the set-cookie header from the response
 		const parsedCookies = parseSetCookieHeaders(context.res);
-		expect(Object.keys(parsedCookies)).toEqual(["name1", "name2"]);
+		expect(parsedCookies).toEqual({
+			cookie1: compressToEncodedURIComponent(JSON.stringify(cookie1)),
+			cookie2: encodeURIComponent(JSON.stringify(cookie2)),
+		});
 
 		// Let's feed the cookies into the request and see if we can retrieve them correctly
 		context.req.headers.cookie = createCookieHeader({...parsedCookies, someOther: "cookie"});
 
-		cookies.setAllNames(["name1", "name2"]);
 		const retrievedCookies = cookies.getAll();
-		expect(retrievedCookies).toEqual({name1: {my: {fancy: "state"}}, name2: {second: "state"}});
+		expect(retrievedCookies).toEqual({cookie1, cookie2});
 
 		// Retrieving the cookies a second time should not parse the cookies again but return the same
 		// object (request cookies do not change)

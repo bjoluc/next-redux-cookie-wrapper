@@ -1,9 +1,9 @@
-import {CookieSerializeOptions} from "cookie";
 import {compressToEncodedURIComponent, decompressFromEncodedURIComponent} from "lz-string";
 import {GetServerSidePropsContext, NextPageContext} from "next";
 import {parseCookies, setCookie} from "nookies";
-import {Except, JsonValue, SetRequired} from "type-fest";
+import {JsonValue, SetRequired} from "type-fest";
 
+import {InternalSubtreeConfig} from "./config";
 import {isClient} from "./util";
 
 export type Cookies = Record<string, JsonValue>;
@@ -13,11 +13,13 @@ export type CookieContext = SetRequired<
 	"req" | "res"
 >;
 
+export type CookieConfig = Pick<InternalSubtreeConfig, "cookieName" | "compress" | "cookieOptions">;
+
 /**
- * An isomorphic class to set and get compressed state cookies.
+ * An isomorphic class to set and get (compressed) state cookies.
  */
 export class StateCookies {
-	protected _allNames: string[] = [];
+	protected _config = new Map<string, CookieConfig>();
 
 	private readonly _context?: CookieContext;
 	private _cookies?: Cookies;
@@ -29,11 +31,25 @@ export class StateCookies {
 		this._context = context;
 	}
 
+	private static _encodeState(state: any) {
+		return encodeURIComponent(JSON.stringify(state));
+	}
+
+	private static _encodeStateCompressed(state: any) {
+		return compressToEncodedURIComponent(JSON.stringify(state));
+	}
+
+	private static _decodeState(state: string, compressed: boolean) {
+		return JSON.parse((compressed ? decompressFromEncodedURIComponent : decodeURIComponent)(state));
+	}
+
 	/**
-	 * Set the names of all the cookies that shall be parsed via `getAll()`
+	 * Set the configuration (@see CookieConfig) for each cookie
 	 */
-	public setAllNames(names: string[]) {
-		this._allNames = names;
+	public setConfigurations(configurations: CookieConfig[]) {
+		for (const config of configurations) {
+			this._config.set(config.cookieName, config);
+		}
 	}
 
 	public getAll() {
@@ -43,8 +59,9 @@ export class StateCookies {
 			for (const [name, value] of Object.entries(
 				parseCookies(this._context, {decode: (value: string) => value})
 			)) {
-				if (this._allNames.includes(name)) {
-					this._cookies[name] = this._decodeState(value);
+				const config = this._config.get(name);
+				if (config) {
+					this._cookies[name] = StateCookies._decodeState(value, config.compress);
 				}
 			}
 		}
@@ -52,23 +69,12 @@ export class StateCookies {
 		return this._cookies;
 	}
 
-	public set(
-		name: string,
-		state: any,
-		options?: Except<CookieSerializeOptions, "encode" | "httpOnly">
-	) {
+	public set(name: string, state: any) {
+		const {cookieOptions, compress} = this._config.get(name)!;
 		setCookie(this._context, name, state, {
-			...options,
-			encode: this._encodeState,
+			...cookieOptions,
+			encode: compress ? StateCookies._encodeStateCompressed : StateCookies._encodeState,
 			httpOnly: false,
 		});
-	}
-
-	private _encodeState(state: any) {
-		return compressToEncodedURIComponent(JSON.stringify(state));
-	}
-
-	private _decodeState(state: string) {
-		return JSON.parse(decompressFromEncodedURIComponent(state));
 	}
 }

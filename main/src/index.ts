@@ -51,19 +51,19 @@ export const wrapMakeStore =
 
 /**
  * A Redux middleware that syncs user-defined subtrees of the Redux state with cookies – on the
- * server and on the client. One cookie is used per state subtree and the serialized state is
- * compressed using [lz-string](https://github.com/pieroxy/lz-string). The subtree paths, cookie
- * names, and cookie options are configured via a {@link NextReduxCookieMiddlewareConfig} object.
+ * server and on the client. One cookie is used per state subtree and the serialized state is, by
+ * default, compressed using [lz-string](https://github.com/pieroxy/lz-string). The subtree paths,
+ * cookie names, cookie options, and compression are configured via a
+ * {@link NextReduxCookieMiddlewareConfig} object.
  */
 export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig) => Middleware =
 	(config) => (store) => {
 		const subtrees = processMiddlewareConfig(config);
-		const cookieNames = subtrees.map((subtree) => subtree.cookieName);
 
 		let cookies: StateCookies;
 		if (isClient()) {
 			cookies = new StateCookies();
-			cookies.setAllNames(cookieNames);
+			cookies.setConfigurations(subtrees);
 		}
 		// On the server, we have to intercept the `SERVE_COOKIES` action to get the `cookies` object
 		// (we cannot directly set a property on the store, sadly, since the middleware does not have
@@ -74,7 +74,7 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 				case SERVE_COOKIES: {
 					// Handle the SERVE_COOKIES action (server-only):
 					cookies = action.payload;
-					cookies.setAllNames(cookieNames);
+					cookies.setConfigurations(subtrees);
 					// Console.log("Cookies received by middleware");
 
 					// We have access to the client's cookies now. Now we need to hydrate the store with their
@@ -98,15 +98,15 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 						const allCookies = cookies.getAll();
 						action.payload = walkState(
 							subtrees,
-							(subtreeConfig) => {
-								if (subtreeConfig.ignoreStateFromStaticProps) {
-									// `action.payload` holds the incoming server state. We overwrite that state with the
-									// state from the cookies: If the incoming state is from getServerSideProps, the
-									// cookies have also been updated to that state. If the incoming state is from
-									// getStaticProps, the cookies have remained unchanged and hence the server's state is
-									// ignored.
+							({ignoreStateFromStaticProps, cookieName}) => {
+								if (ignoreStateFromStaticProps) {
+									// `action.payload` holds the incoming server state. We overwrite that state with
+									// the state from the cookies: If the incoming state is from getServerSideProps,
+									// the cookies have also been updated to that state. If the incoming state is from
+									// getStaticProps, the cookies have remained unchanged and hence the server's
+									// state is ignored.
 
-									return allCookies[subtreeConfig.cookieName];
+									return allCookies[cookieName];
 								}
 							},
 							action.payload
@@ -124,11 +124,9 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 					if (cookies) {
 						walkState(
 							subtrees,
-							(subtreeConfig, oldSubtreeState, newSubtreeState) => {
+							({cookieName}, oldSubtreeState, newSubtreeState) => {
 								if (!isEqual(oldSubtreeState, newSubtreeState)) {
-									const {cookieName, subtree, ignoreStateFromStaticProps, ...cookieOptions} =
-										subtreeConfig;
-									cookies.set(cookieName, newSubtreeState, cookieOptions);
+									cookies.set(cookieName, newSubtreeState);
 								}
 							},
 							oldState,

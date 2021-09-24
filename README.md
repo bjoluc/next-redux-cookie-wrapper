@@ -17,7 +17,7 @@ Hence, the first render on the client side may largely differ from the server-re
 A solution to this is a storage method that is available to both the server and the client by default: Cookies.
 
 This library started as a drop-in replacement for [next-redux-wrapper](https://github.com/kirill-konshin/next-redux-wrapper/) that built upon Redux Persist and a [storage adapter for cookies](https://github.com/abersager/redux-persist-cookie-storage).
-However, in response to `getStaticProps()` and `getServerSideProps()` being introduced in Next.js, this library has been rewritten and the tooling has been simplified significantly.
+However, in response to `getStaticProps()` and `getServerSideProps()` being introduced in Next.js, it has been rewritten and the tooling has been simplified significantly.
 What remains is a single Redux middleware and a tiny wrapper around the `makeStore()` function.
 
 ## How does it work?
@@ -32,9 +32,8 @@ This way, incoming state updates from `getStaticProps()` do not overwrite the sy
 You can opt out of this behavior on a per-state-subtree basis and instead always receive the server's state in the `HYDRATE` reducer if you wish to handle state portions from `getStaticProps()` on your own.
 
 Some words about compression:
-The serialized cookie state is compressed using [lz-string](https://github.com/pieroxy/lz-string) to keep the cookie size small.
-Currently, there is no way to disable compression.
-If you would like to see one implemented, please let me know.
+By default, the serialized cookie state is compressed using [lz-string](https://github.com/pieroxy/lz-string) to keep the cookie size small.
+You can disable compression globally or per state subtree by setting the `compress` option to `false`.
 
 ## Setup
 
@@ -105,4 +104,4 @@ Alternatively, you can also configure the serializability middleware to ignore t
 
 ## Configuration
 
-For the configuration options of `nextReduxCookieMiddleware`, please refer to [the API documentation](https://next-redux-cookie-wrapper.js.org/interfaces/nextreduxcookiemiddlewareconfig.html).
+For the configuration options of `nextReduxCookieMiddleware`, please refer to [the API documentation](https://next-redux-cookie-wrapper.js.org/interfaces/NextReduxCookieMiddlewareConfig.html).

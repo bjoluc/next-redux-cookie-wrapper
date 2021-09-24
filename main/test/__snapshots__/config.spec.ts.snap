@@ -1,67 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`processMiddlewareConfig() should apply default values to subtree config objects 1`] = `
+exports[`processMiddlewareConfig() should include global options in InternalSubtreeConfig objects 1`] = `
 Object {
-  "0": Object {
-    "cookieName": "path1",
-    "ignoreStateFromStaticProps": true,
-    "path": "/",
-    "sameSite": true,
-    "subtree": "path1",
-  },
-  "1": Object {
-    "cookieName": "path2",
-    "ignoreStateFromStaticProps": true,
-    "path": "/",
-    "sameSite": true,
-    "subtree": "path2",
-  },
-  "2": Object {
-    "cookieName": "name",
-    "ignoreStateFromStaticProps": false,
+  "compress": false,
+  "cookieName": "path1",
+  "cookieOptions": Object {
     "path": "/test",
     "sameSite": false,
-    "subtree": "path3",
+    "secure": true,
   },
-}
-`;
-
-exports[`processMiddlewareConfig() should include global options in SubtreeConfig objects 1`] = `
-Object {
-  "cookieName": "path1",
   "ignoreStateFromStaticProps": false,
-  "path": "/test",
-  "sameSite": false,
-  "secure": true,
   "subtree": "path1",
 }
 `;
 
-exports[`processMiddlewareConfig() should include global options in SubtreeConfig objects 2`] = `
+exports[`processMiddlewareConfig() should include global options in InternalSubtreeConfig objects 2`] = `
 Object {
+  "compress": false,
   "cookieName": "path2",
+  "cookieOptions": Object {
+    "path": "/test",
+    "sameSite": false,
+    "secure": true,
+  },
   "ignoreStateFromStaticProps": false,
-  "path": "/test",
-  "sameSite": false,
-  "secure": true,
   "subtree": "path2",
 }
 `;
 
-exports[`processMiddlewareConfig() should turn subtree strings into \`SubtreeConfig\` objects 1`] = `
+exports[`processMiddlewareConfig() should turn subtree strings into config objects 1`] = `
 Object {
   "0": Object {
+    "compress": true,
     "cookieName": "path1",
+    "cookieOptions": Object {
+      "path": "/",
+      "sameSite": true,
+    },
     "ignoreStateFromStaticProps": true,
-    "path": "/",
-    "sameSite": true,
     "subtree": "path1",
   },
   "1": Object {
+    "compress": true,
     "cookieName": "path2",
+    "cookieOptions": Object {
+      "path": "/",
+      "sameSite": true,
+    },
     "ignoreStateFromStaticProps": true,
-    "path": "/",
-    "sameSite": true,
     "subtree": "path2",
   },
 }

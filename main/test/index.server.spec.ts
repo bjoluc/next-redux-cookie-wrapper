@@ -78,8 +78,6 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 		],
 	};
 
-	const cookieOptionsMatcher = expect.objectContaining({domain: config.domain});
-
 	it("should dispatch HYDRATE with the cookie state and update cookies on relevant state changes", () => {
 		const {store, next, invoke, setState} = createMiddlewareTestFunctions(config);
 
@@ -95,8 +93,17 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 		// action
 		invoke({type: SERVE_COOKIES, payload: stateCookies});
 
-		expect(stateCookies.setAllNames).toHaveBeenCalledTimes(1);
-		expect(stateCookies.setAllNames).toHaveBeenCalledWith(["cookie1", "cookie2"]);
+		expect(stateCookies.setConfigurations).toHaveBeenCalledTimes(1);
+		expect(stateCookies.setConfigurations).toHaveBeenCalledWith([
+			expect.objectContaining({
+				cookieName: "cookie1",
+				cookieOptions: expect.objectContaining({domain: "example.org"}),
+			}),
+			expect.objectContaining({
+				cookieName: "cookie2",
+				cookieOptions: expect.objectContaining({domain: "example.org"}),
+			}),
+		]);
 
 		expect(store.dispatch).toHaveBeenCalledTimes(1);
 		expect(store.dispatch).toHaveBeenCalledWith({
@@ -116,11 +123,7 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 
 		// The middleware should have updated cookie1, and only cookie1
 		expect(stateCookies.set).toHaveBeenCalledTimes(1);
-		expect(stateCookies.set).toHaveBeenCalledWith(
-			"cookie1",
-			{modified: true},
-			cookieOptionsMatcher
-		);
+		expect(stateCookies.set).toHaveBeenCalledWith("cookie1", {modified: true});
 		stateCookies.set.mockReset();
 
 		// Simulate an action that leaves the state untouched

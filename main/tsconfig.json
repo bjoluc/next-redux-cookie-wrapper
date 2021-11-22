@@ -3,7 +3,7 @@
 	"include": ["src", "types"],
 	"compilerOptions": {
 		"module": "esnext",
-		"target": "esnext", // TODO Why is this required for the tests to work?
+		"target": "esnext",
 		"lib": ["dom", "esnext"],
 		"importHelpers": true,
 		// output .d.ts declaration files for consumers

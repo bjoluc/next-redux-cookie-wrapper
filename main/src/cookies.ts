@@ -40,7 +40,9 @@ export class StateCookies {
 	}
 
 	private static _decodeState(state: string, compressed: boolean) {
-		return JSON.parse((compressed ? decompressFromEncodedURIComponent : decodeURIComponent)(state));
+		return JSON.parse(
+			(compressed ? decompressFromEncodedURIComponent : decodeURIComponent)(state)!
+		);
 	}
 
 	/**

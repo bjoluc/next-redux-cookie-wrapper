@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [2.1.1](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.1.0...v2.1.1) (2021-11-23)
+
+
+### Bug Fixes
+
+* **Dependencies:** Install lz-string from the NPM registry instead of the GitHub repo ([f6c8d09](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/f6c8d09001f2374af8c8245186bad59ee0dc933f)), closes [#20](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/20) [#20](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/20)
+
 ## [2.1.0](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.0.1...v2.1.0) (2021-09-24)
 
 

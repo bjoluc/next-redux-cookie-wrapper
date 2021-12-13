@@ -32,7 +32,12 @@ export const wrapMakeStore =
 	(context: Context) => {
 		const store = makeStore(context);
 
-		if (!isClient()) {
+		if (isClient()) {
+			// Dispatch an empty HYDRATE action in case the current page doesn't have getServerSideProps,
+			// getStaticProps, or getInitialProps and there are state cookies available. The middleware
+			// will then add any state subtrees from cookies to the HYDRATE action's payload.
+			store.dispatch({type: HYDRATE, payload: {}});
+		} else {
 			if (isAppContext(context)) {
 				context = context.ctx;
 			}

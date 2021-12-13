@@ -1,32 +1,19 @@
-import {NextPageContext} from "next";
 import {HYDRATE} from "next-redux-wrapper";
-import {AppContext} from "next/app";
 /* eslint-disable-next-line import/no-extraneous-dependencies */ // TSDX includes ts-jest
 import {mocked} from "ts-jest/utils";
 
 import {wrapMakeStore} from "../src";
 import {NextReduxCookieMiddlewareConfig} from "../src/config";
 import {StateCookies} from "../src/cookies";
-import {createMiddlewareTestFunctions, makeAppContext, makePageContext, makeStore} from "./util";
+import {createMiddlewareTestFunctions, makeStore} from "./util";
 
 jest.mock("../src/cookies");
 
 describe("wrapMakeStore() on the client", () => {
-	describe("should never dispatch any action, regardless of whether...", () => {
-		let context: NextPageContext | AppContext;
-
-		test("a NextPageContext is provided", () => {
-			context = makePageContext(false);
-		});
-
-		test("an AppContext is provided", () => {
-			context = makeAppContext(makePageContext(false));
-		});
-
-		afterEach(() => {
-			const store = wrapMakeStore(makeStore)(context);
-			expect(store.dispatch).toHaveBeenCalledTimes(0);
-		});
+	it("should dispatch an empty HYDRATE action", () => {
+		const store = wrapMakeStore(makeStore)({}); // `next-redux-wrapper` always provides an empty context object on the client
+		expect(store.dispatch).toHaveBeenCalledTimes(1);
+		expect(store.dispatch).toHaveBeenCalledWith({type: HYDRATE, payload: {}});
 	});
 });
 

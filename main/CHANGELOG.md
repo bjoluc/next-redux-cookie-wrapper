@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [2.1.2](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.1.1...v2.1.2) (2021-12-13)
+
+
+### Bug Fixes
+
+* Fix client-side hydration on pages without server-side data fetching methods ([8246f5c](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/8246f5c4260c4524dca279acc28163c970d6ff2a)), closes [#22](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/22)
+
 ### [2.1.1](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.1.0...v2.1.1) (2021-11-23)
 
 

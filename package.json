@@ -14,10 +14,6 @@
 	},
 	"devDependencies": {
 		"@bjoluc/semantic-release-config-npm": "^2.0.0",
-		"@commitlint/cli": "15.0.0",
-		"@commitlint/config-conventional": "^15.0.0",
-		"commitizen": "^4.2.4",
-		"cz-conventional-changelog": "3.3.0",
 		"eslint-config-xo": "^0.35.0",
 		"eslint-config-xo-react": "^0.24.0",
 		"eslint-plugin-react": "^7.23.2",
@@ -64,33 +60,5 @@
 		"{main,demo}/**/*.{ts,tsx}": [
 			"xo --fix"
 		]
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-conventional-changelog",
-			"disableScopeLowerCase": true,
-			"disableSubjectLowerCase": true
-		}
-	},
-	"commitlint": {
-		"extends": [
-			"@commitlint/config-conventional"
-		],
-		"rules": {
-			"subject-case": [
-				2,
-				"always",
-				[
-					"sentence-case"
-				]
-			],
-			"scope-case": [
-				1,
-				"never",
-				[
-					"lower-case"
-				]
-			]
-		}
 	}
 }

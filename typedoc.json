@@ -1,4 +1,5 @@
 {
+	"$schema": "https://typedoc.org/schema.json",
 	"entryPoints": ["main/src/index.ts"],
 	"out": "docs",
 	"tsconfig": "main/tsconfig.json",

@@ -1,7 +1,8 @@
 import {CookieSerializeOptions} from "cookie";
 import {Except, SetRequired} from "type-fest";
 
-export type CookieOptions = Except<CookieSerializeOptions, "encode" | "httpOnly">;
+// Using the builtin `Omit` type here as Typedoc doesn't inherit docs with type-fest's `Except`
+export type CookieOptions = Omit<CookieSerializeOptions, "encode" | "httpOnly">;
 
 export interface SubtreeConfig extends CookieOptions {
 	/**
@@ -72,7 +73,7 @@ export interface InternalSubtreeConfig
  * but `false` for `three`.
  */
 export interface NextReduxCookieMiddlewareConfig
-	extends Except<SubtreeConfig, "subtree" | "cookieName"> {
+	extends Omit<SubtreeConfig, "subtree" | "cookieName"> {
 	/**
 	 * Specifies which subtrees of the state shall be synced with cookies, and how. Takes a list of
 	 * subtree paths (e.g. `my.subtree`) and/or {@link SubtreeConfig} objects.

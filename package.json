@@ -13,48 +13,18 @@
 		"docs:watch": "npm run docs -- --watch"
 	},
 	"devDependencies": {
+		"@bjoluc/eslint-config-xo-next": "^1.1.0",
 		"@bjoluc/semantic-release-config-npm": "^2.0.0",
-		"eslint-config-xo": "^0.35.0",
-		"eslint-config-xo-react": "^0.24.0",
-		"eslint-plugin-react": "^7.23.2",
-		"eslint-plugin-react-hooks": "^4.2.0",
 		"husky": "^7.0.4",
-		"import-sort-style-module": "6.0.0",
 		"lint-staged": "12.1.2",
-		"prettier": "2.5.1",
-		"prettier-plugin-import-sort": "0.0.7",
 		"typedoc": "^0.22.10",
 		"xo": "^0.38.2"
 	},
-	"prettier": {
-		"trailingComma": "es5",
-		"printWidth": 100,
-		"singleQuote": false,
-		"useTabs": true
-	},
-	"importSort": {
-		".ts, .tsx, .js": {
-			"style": "module",
-			"parser": "typescript"
-		}
-	},
+	"prettier": "@bjoluc/eslint-config-xo-next/prettier.config",
 	"xo": {
-		"extends": "xo-react",
+		"extends": "@bjoluc/xo-next",
 		"prettier": true,
-		"rules": {
-			"unicorn/prevent-abbreviations": [
-				"error",
-				{
-					"replacements": {
-						"res": false,
-						"props": false,
-						"env": false
-					}
-				}
-			],
-			"@typescript-eslint/prefer-ts-expect-error": "off",
-			"@typescript-eslint/no-implicit-any-catch": "off"
-		}
+		"rules": {}
 	},
 	"lint-staged": {
 		"{main,demo}/**/*.{ts,tsx}": [

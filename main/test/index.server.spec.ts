@@ -3,7 +3,6 @@
  */
 
 import {Context, HYDRATE} from "next-redux-wrapper";
-/* eslint-disable-next-line import/no-extraneous-dependencies */ // TSDX includes ts-jest
 import {mocked} from "ts-jest/utils";
 
 import {SERVE_COOKIES, wrapMakeStore} from "../src";

@@ -10,8 +10,8 @@ import {parse} from "set-cookie-parser";
 
 import {CookieContext, StateCookies} from "../src/cookies";
 
-export function parseSetCookieHeaders(res: ServerResponse) {
-	const headers = res.getHeader("set-cookie") as string | string[];
+export function parseSetCookieHeaders(response: ServerResponse) {
+	const headers = response.getHeader("set-cookie") as string | string[];
 
 	return Object.fromEntries(
 		parse(headers, {decodeValues: false}).map((cookie) => [cookie.name, cookie.value])

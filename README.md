@@ -41,7 +41,7 @@ You can disable compression globally or per state subtree by setting the `compre
 > For a quick working example, check out the demo project in this repository.
 > It uses [Redux Toolkit](https://redux-toolkit.js.org/) but that should not discourage you.
 >  * Clone the repository
->  * Make sure you have npm 7 installed (`npm i -g npm@7`; required for the workspaces feature)
+>  * Make sure you have have NPM v7 or later installed (`npm i -g "npm@>=7"`; required for the workspaces feature)
 >  * Run `npm install` in the root directory
 >  * `cd demo && npm start`
 >  * Inspect the setup in [`store.ts`](https://github.com/bjoluc/next-redux-cookie-wrapper/tree/main/demo/store.ts)

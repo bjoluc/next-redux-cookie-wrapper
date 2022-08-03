@@ -20,7 +20,7 @@
 		"test": "tsdx test --passWithNoTests --coverage",
 		"test:watch": "npm run test -- --watch",
 		"tsc": "tsc",
-		"build": "tsdx build",
+		"build": "tsdx build --tsconfig tsconfig.build.json",
 		"size": "size-limit",
 		"analyze": "size-limit --why",
 		"prepare": "npm run build",

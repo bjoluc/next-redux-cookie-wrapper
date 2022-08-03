@@ -44,6 +44,7 @@ export const createMiddlewareTestFunctions = (config: NextReduxCookieMiddlewareC
 
 	const middleware = nextReduxCookieMiddleware(config)(store);
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 	const invoke = (action: AnyAction) => middleware(next)(action);
 
 	return {store, setState, next, invoke};

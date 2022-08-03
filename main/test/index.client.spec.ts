@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import {HYDRATE} from "next-redux-wrapper";
 import {mocked} from "ts-jest/utils";
 
@@ -45,7 +47,9 @@ describe("nextReduxCookieMiddleware() on the client", () => {
 		expect(stateCookies.setConfigurations).toHaveBeenCalledWith([
 			expect.objectContaining({
 				cookieName: "cookie1",
-				cookieOptions: expect.objectContaining({secure: true}),
+				cookieOptions: expect.objectContaining({
+					secure: true,
+				}),
 			}),
 			expect.objectContaining({
 				cookieName: "cookie2",

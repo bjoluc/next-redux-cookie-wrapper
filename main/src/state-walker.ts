@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import {produce} from "immer";
 import get from "lodash/get";
 import set from "lodash/set";
-import {JsonObject} from "type-fest";
+import {JsonObject, JsonValue} from "type-fest";
 
 import {InternalSubtreeConfig} from "./config";
 
@@ -26,9 +28,9 @@ export const walkState = <State extends JsonObject>(
 	subtrees: InternalSubtreeConfig[],
 	walker: (
 		subtreeConfig: InternalSubtreeConfig,
-		subtreeA?: unknown,
-		subtreeB?: unknown
-	) => unknown | undefined,
+		subtreeA?: JsonValue,
+		subtreeB?: JsonValue
+	) => JsonValue | undefined | void,
 	stateA: State,
 	stateB?: State
 ) =>

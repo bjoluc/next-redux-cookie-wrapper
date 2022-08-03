@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import {ServerResponse} from "http";
+import {ServerResponse} from "node:http";
 
 import {compressToEncodedURIComponent} from "lz-string";
 import {createMocks} from "node-mocks-http";

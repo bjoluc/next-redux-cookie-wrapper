@@ -19,6 +19,20 @@ export type CookieConfig = Pick<InternalSubtreeConfig, "cookieName" | "compress"
  * An isomorphic class to set and get (compressed) state cookies.
  */
 export class StateCookies {
+	private static _encodeState(state: any) {
+		return encodeURIComponent(JSON.stringify(state));
+	}
+
+	private static _encodeStateCompressed(state: any) {
+		return compressToEncodedURIComponent(JSON.stringify(state));
+	}
+
+	private static _decodeState(state: string, compressed: boolean): JsonValue {
+		return JSON.parse(
+			(compressed ? decompressFromEncodedURIComponent : decodeURIComponent)(state)!
+		) as JsonValue;
+	}
+
 	protected _config = new Map<string, CookieConfig>();
 
 	private readonly _context?: CookieContext;
@@ -29,20 +43,6 @@ export class StateCookies {
 	 */
 	constructor(context?: CookieContext) {
 		this._context = context;
-	}
-
-	private static _encodeState(state: any) {
-		return encodeURIComponent(JSON.stringify(state));
-	}
-
-	private static _encodeStateCompressed(state: any) {
-		return compressToEncodedURIComponent(JSON.stringify(state));
-	}
-
-	private static _decodeState(state: string, compressed: boolean) {
-		return JSON.parse(
-			(compressed ? decompressFromEncodedURIComponent : decodeURIComponent)(state)!
-		);
 	}
 
 	/**

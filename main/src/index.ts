@@ -1,6 +1,7 @@
 import isEqual from "fast-deep-equal";
 import {Context, HYDRATE, MakeStore} from "next-redux-wrapper";
 import {AnyAction, Middleware, Store} from "redux";
+import {JsonObject} from "type-fest";
 
 import {NextReduxCookieMiddlewareConfig, processMiddlewareConfig} from "./config";
 import {StateCookies} from "./cookies";
@@ -78,7 +79,7 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 			switch (action.type) {
 				case SERVE_COOKIES: {
 					// Handle the SERVE_COOKIES action (server-only):
-					cookies = action.payload;
+					cookies = action.payload as StateCookies;
 					cookies.setConfigurations(subtrees);
 					// Console.log("Cookies received by middleware");
 
@@ -114,15 +115,15 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 									return allCookies[cookieName];
 								}
 							},
-							action.payload
+							action.payload as JsonObject
 						);
 					}
 				// Fall through to default handling of the `HYDRATE` action
 
 				default: {
-					const oldState = store.getState();
+					const oldState = store.getState() as JsonObject;
 					const result = next(action);
-					const newState = store.getState();
+					const newState = store.getState() as JsonObject;
 
 					// If cookies are available (which is not the case during `getStaticProps()`), write the
 					// new state into cookies wherever necessary

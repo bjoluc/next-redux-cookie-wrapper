@@ -27,6 +27,7 @@ export const pageSlice = createSlice({
 	},
 
 	extraReducers: {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		[HYDRATE]: (state, {payload}) => ({
 			...state,
 			...payload.page,

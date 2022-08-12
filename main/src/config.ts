@@ -118,7 +118,15 @@ export function processMiddlewareConfig(
 					current = {subtree: current};
 				}
 
-				const {ignoreStateFromStaticProps, compress, subtree, cookieName, ...cookieOptions} = {
+				const {
+					ignoreStateFromStaticProps,
+					compress,
+					subtree,
+					cookieName,
+					encodeFunction,
+					decodeFunction,
+					...cookieOptions
+				} = {
 					...globalSubtreeConfig,
 					cookieName: current.subtree,
 					...current,
@@ -128,6 +136,8 @@ export function processMiddlewareConfig(
 					compress,
 					subtree,
 					cookieName,
+					encodeFunction,
+					decodeFunction,
 					cookieOptions,
 				};
 			})

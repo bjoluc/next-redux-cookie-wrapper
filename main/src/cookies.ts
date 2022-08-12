@@ -13,7 +13,10 @@ export type CookieContext = SetRequired<
 	"req" | "res"
 >;
 
-export type CookieConfig = Pick<InternalSubtreeConfig, "cookieName" | "compress" | "cookieOptions">;
+export type CookieConfig = Pick<
+	InternalSubtreeConfig,
+	"cookieName" | "compress" | "cookieOptions" | "decodeFunction" | "encodeFunction"
+>;
 
 /**
  * An isomorphic class to set and get (compressed) state cookies.
@@ -27,7 +30,17 @@ export class StateCookies {
 		return compressToEncodedURIComponent(JSON.stringify(state));
 	}
 
-	private static _decodeState(state: string, compressed: boolean): JsonValue {
+	private static _decodeState(
+		state: string,
+		compressed: boolean,
+		decodeFunction?: (string: string) => any
+	): JsonValue {
+		// If user supply decodeFunction, use that
+		if (decodeFunction) {
+			return decodeFunction(state);
+		}
+
+		// Otherwise, use default decoder
 		return JSON.parse(
 			(compressed ? decompressFromEncodedURIComponent : decodeURIComponent)(state)!
 		) as JsonValue;
@@ -63,7 +76,11 @@ export class StateCookies {
 			)) {
 				const config = this._config.get(name);
 				if (config) {
-					this._cookies[name] = StateCookies._decodeState(value, config.compress);
+					this._cookies[name] = StateCookies._decodeState(
+						value,
+						config.compress,
+						config.decodeFunction
+					);
 				}
 			}
 		}
@@ -72,10 +89,14 @@ export class StateCookies {
 	}
 
 	public set(name: string, state: any) {
-		const {cookieOptions, compress} = this._config.get(name)!;
+		const {cookieOptions, compress, encodeFunction} = this._config.get(name)!;
 		setCookie(this._context, name, state, {
 			...cookieOptions,
-			encode: compress ? StateCookies._encodeStateCompressed : StateCookies._encodeState,
+			encode: encodeFunction
+				? encodeFunction
+				: compress
+				? StateCookies._encodeStateCompressed
+				: StateCookies._encodeState,
 			httpOnly: false,
 		});
 	}

@@ -40,6 +40,18 @@ export interface SubtreeConfig extends CookieOptions {
 	 * Whether or not to compress cookie values using lz-string. Defaults to `true`.
 	 */
 	compress?: boolean;
+
+	/**
+	 * Function to encode or compress state into string.
+	 * Defaults to encodeLzString(encodeURIComponent(JSON.stringify(state)))
+	 */
+	encodeFunction?: (state: any) => string;
+
+	/**
+	 * Function to encode or compress state into string.
+	 * Defaults to JSON.parse(decodeURIComponent(decodeLzString(state)))
+	 */
+	decodeFunction?: (state: string) => any;
 }
 
 export interface InternalSubtreeConfig

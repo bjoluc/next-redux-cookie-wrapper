@@ -63,8 +63,10 @@ describe("StateCookies on the server", () => {
 			{
 				cookieName: "cookie1",
 				compress: true,
-				encodeFunction: (state) => Buffer.from(JSON.stringify(state), "utf-8").toString("base64"),
-				decodeFunction: (state) => JSON.parse(Buffer.from(state, "base64").toString("utf-8")),
+				serializationFunction: (state) =>
+					Buffer.from(JSON.stringify(state), "utf-8").toString("base64"),
+				deserializationFunction: (state) =>
+					JSON.parse(Buffer.from(state, "base64").toString("utf-8")),
 				cookieOptions: {},
 			},
 			{cookieName: "cookie2", compress: false, cookieOptions: {path: "/"}},
@@ -78,7 +80,9 @@ describe("StateCookies on the server", () => {
 		// Parse the set-cookie header from the response
 		const parsedCookies = parseSetCookieHeaders(context.res);
 		expect(parsedCookies).toEqual({
-			cookie1: Buffer.from(JSON.stringify(cookie1), "utf-8").toString("base64"),
+			cookie1: compressToEncodedURIComponent(
+				encodeURIComponent(Buffer.from(JSON.stringify(cookie1), "utf-8").toString("base64"))
+			),
 			cookie2: encodeURIComponent(JSON.stringify(cookie2)),
 		});
 

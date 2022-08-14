@@ -9,9 +9,9 @@ Object {
     "sameSite": false,
     "secure": true,
   },
-  "decodeFunction": undefined,
-  "encodeFunction": undefined,
+  "deserializationFunction": undefined,
   "ignoreStateFromStaticProps": false,
+  "serializationFunction": undefined,
   "subtree": "path1",
 }
 `;
@@ -25,9 +25,9 @@ Object {
     "sameSite": false,
     "secure": true,
   },
-  "decodeFunction": undefined,
-  "encodeFunction": undefined,
+  "deserializationFunction": undefined,
   "ignoreStateFromStaticProps": false,
+  "serializationFunction": undefined,
   "subtree": "path2",
 }
 `;
@@ -41,9 +41,9 @@ Object {
       "path": "/",
       "sameSite": true,
     },
-    "decodeFunction": undefined,
-    "encodeFunction": undefined,
+    "deserializationFunction": undefined,
     "ignoreStateFromStaticProps": true,
+    "serializationFunction": undefined,
     "subtree": "path1",
   },
   "1": Object {
@@ -53,9 +53,9 @@ Object {
       "path": "/",
       "sameSite": true,
     },
-    "decodeFunction": undefined,
-    "encodeFunction": undefined,
+    "deserializationFunction": undefined,
     "ignoreStateFromStaticProps": true,
+    "serializationFunction": undefined,
     "subtree": "path2",
   },
 }

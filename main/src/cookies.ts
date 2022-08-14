@@ -15,19 +15,27 @@ export type CookieContext = SetRequired<
 
 export type CookieConfig = Pick<
 	InternalSubtreeConfig,
-	"cookieName" | "compress" | "cookieOptions" | "decodeFunction" | "encodeFunction"
+	"cookieName" | "compress" | "cookieOptions" | "deserializationFunction" | "serializationFunction"
 >;
 
 /**
  * An isomorphic class to set and get (compressed) state cookies.
  */
 export class StateCookies {
-	private static _encodeState(state: any) {
-		return encodeURIComponent(JSON.stringify(state));
+	private static _encodeState(serializationFunction?: (state: any) => string) {
+		return function (state: any) {
+			return encodeURIComponent(
+				(serializationFunction ? serializationFunction : JSON.stringify)(state)
+			);
+		};
 	}
 
-	private static _encodeStateCompressed(state: any) {
-		return compressToEncodedURIComponent(JSON.stringify(state));
+	private static _encodeStateCompressed(serializationFunction?: (state: any) => string) {
+		return function (state: any): string {
+			return compressToEncodedURIComponent(
+				(serializationFunction ? serializationFunction : JSON.stringify)(state)
+			);
+		};
 	}
 
 	private static _decodeState(
@@ -79,7 +87,7 @@ export class StateCookies {
 					this._cookies[name] = StateCookies._decodeState(
 						value,
 						config.compress,
-						config.decodeFunction
+						config.deserializationFunction
 					);
 				}
 			}
@@ -89,14 +97,14 @@ export class StateCookies {
 	}
 
 	public set(name: string, state: any) {
-		const {cookieOptions, compress, encodeFunction} = this._config.get(name)!;
+		const {cookieOptions, compress, serializationFunction} = this._config.get(name)!;
+
 		setCookie(this._context, name, state, {
 			...cookieOptions,
-			encode: encodeFunction
-				? encodeFunction
-				: compress
-				? StateCookies._encodeStateCompressed
-				: StateCookies._encodeState,
+			encode: compress
+				? // They're Higher order function, so, they return a function to (de)serialize state.
+				  StateCookies._encodeStateCompressed(serializationFunction)
+				: StateCookies._encodeState(serializationFunction),
 			httpOnly: false,
 		});
 	}

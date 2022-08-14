@@ -42,16 +42,16 @@ export interface SubtreeConfig extends CookieOptions {
 	compress?: boolean;
 
 	/**
-	 * Function to encode or compress state into string.
-	 * Defaults to encodeLzString(encodeURIComponent(JSON.stringify(state)))
+	 * Function to serialize state into string.
+	 * Defaults to JSON
 	 */
-	encodeFunction?: (state: any) => string;
+	serializationFunction?: (state: any) => string;
 
 	/**
-	 * Function to encode or compress state into string.
+	 * Function to deserialize state into string.
 	 * Defaults to JSON.parse(decodeURIComponent(decodeLzString(state)))
 	 */
-	decodeFunction?: (state: string) => any;
+	deserializationFunction?: (state: string) => any;
 }
 
 export interface InternalSubtreeConfig
@@ -123,8 +123,8 @@ export function processMiddlewareConfig(
 					compress,
 					subtree,
 					cookieName,
-					encodeFunction,
-					decodeFunction,
+					serializationFunction,
+					deserializationFunction,
 					...cookieOptions
 				} = {
 					...globalSubtreeConfig,
@@ -136,8 +136,8 @@ export function processMiddlewareConfig(
 					compress,
 					subtree,
 					cookieName,
-					encodeFunction,
-					decodeFunction,
+					serializationFunction,
+					deserializationFunction,
 					cookieOptions,
 				};
 			})

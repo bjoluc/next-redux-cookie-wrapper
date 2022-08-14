@@ -1,7 +1,3 @@
-/**
- * @jest-environment node
- */
-
 import {ServerResponse} from "node:http";
 
 import {compressToEncodedURIComponent} from "lz-string";

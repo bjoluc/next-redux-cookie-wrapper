@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {StateCookies} from "../src/cookies";
 
 describe("StateCookies on the client", () => {

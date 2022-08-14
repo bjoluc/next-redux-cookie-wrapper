@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {Context, HYDRATE} from "next-redux-wrapper";
-import {mocked} from "ts-jest/utils";
 
 import {SERVE_COOKIES, wrapMakeStore} from "../src";
 import {NextReduxCookieMiddlewareConfig} from "../src/config";
@@ -84,7 +83,7 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 		const cookie1 = {my: {first: "cookie"}};
 		const cookie2 = 2;
 
-		const stateCookies = mocked(new StateCookies(), true);
+		const stateCookies = jest.mocked(new StateCookies(), true);
 
 		// Mock stateCookies methods
 		stateCookies.getAll.mockImplementation(() => ({cookie1, cookie2}));

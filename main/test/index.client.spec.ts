@@ -1,7 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {HYDRATE} from "next-redux-wrapper";
-import {mocked} from "ts-jest/utils";
 
 import {wrapMakeStore} from "../src";
 import {NextReduxCookieMiddlewareConfig} from "../src/config";
@@ -19,12 +21,12 @@ describe("wrapMakeStore() on the client", () => {
 });
 
 describe("nextReduxCookieMiddleware() on the client", () => {
-	const stateCookiesClassMock = mocked(StateCookies, true);
+	const stateCookiesClassMock = jest.mocked(StateCookies, true);
 
 	const getStateCookiesInstance = () => {
 		// The middleware should have created a StateCookies object – let's sneak it!
 		expect(stateCookiesClassMock.mock.instances).toHaveLength(1);
-		return mocked(stateCookiesClassMock.mock.instances[0], true);
+		return jest.mocked(stateCookiesClassMock.mock.instances[0], true);
 	};
 
 	beforeEach(() => {

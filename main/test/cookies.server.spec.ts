@@ -69,7 +69,15 @@ describe("StateCookies on the server", () => {
 					JSON.parse(Buffer.from(state, "base64").toString("utf-8")),
 				cookieOptions: {},
 			},
-			{cookieName: "cookie2", compress: false, cookieOptions: {path: "/"}},
+			{
+				cookieName: "cookie2",
+				serializationFunction: (state) =>
+					Buffer.from(JSON.stringify(state), "utf-8").toString("base64"),
+				deserializationFunction: (state) =>
+					JSON.parse(Buffer.from(state, "base64").toString("utf-8")),
+				compress: false,
+				cookieOptions: {path: "/"},
+			},
 		]);
 
 		const cookie1 = {my: {fancy: "state"}};
@@ -81,9 +89,9 @@ describe("StateCookies on the server", () => {
 		const parsedCookies = parseSetCookieHeaders(context.res);
 		expect(parsedCookies).toEqual({
 			cookie1: compressToEncodedURIComponent(
-				encodeURIComponent(Buffer.from(JSON.stringify(cookie1), "utf-8").toString("base64"))
+				Buffer.from(JSON.stringify(cookie1), "utf-8").toString("base64")
 			),
-			cookie2: encodeURIComponent(JSON.stringify(cookie2)),
+			cookie2: encodeURIComponent(Buffer.from(JSON.stringify(cookie2), "utf-8").toString("base64")),
 		});
 
 		// Let's feed the cookies into the request and see if we can retrieve them correctly

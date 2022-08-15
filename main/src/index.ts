@@ -59,7 +59,7 @@ export const wrapMakeStore =
  * A Redux middleware that syncs user-defined subtrees of the Redux state with cookies – on the
  * server and on the client. One cookie is used per state subtree and the serialized state is, by
  * default, compressed using [lz-string](https://github.com/pieroxy/lz-string). The subtree paths,
- * cookie names, cookie options, and compression are configured via a
+ * cookie names, cookie options, serialization, and compression are configured via a
  * {@link NextReduxCookieMiddlewareConfig} object.
  */
 export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig) => Middleware =

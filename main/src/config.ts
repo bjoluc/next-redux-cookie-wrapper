@@ -42,14 +42,15 @@ export interface SubtreeConfig extends CookieOptions {
 	compress?: boolean;
 
 	/**
-	 * Function to serialize state into string.
-	 * Defaults to JSON
+	 * A function that serializes subtree state into a string. Defaults to `JSON.stringify`.
+	 *
+	 * @note If you set this, make sure to also set the {@link SubtreeConfig.deserializationFunction} option accordingly.
 	 */
 	serializationFunction?: (state: any) => string;
 
 	/**
-	 * Function to deserialize state into string.
-	 * Defaults to JSON.parse(decodeURIComponent(decodeLzString(state)))
+	 * A function that parses a string created by {@link SubtreeConfig.serializationFunction} and returns the
+	 * corresponding subtree state. Defaults to `JSON.parse`.
 	 */
 	deserializationFunction?: (state: string) => any;
 }

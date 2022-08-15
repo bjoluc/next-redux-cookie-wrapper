@@ -90,6 +90,7 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 					// Console.log("Triggering initial HYDRATE");
 					store.dispatch({
 						type: HYDRATE,
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 						payload: walkState(subtrees, (subtree) => allCookies[subtree.cookieName], {}),
 					});
 
@@ -112,6 +113,7 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 									// getStaticProps, the cookies have remained unchanged and hence the server's
 									// state is ignored.
 
+									// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 									return allCookies[cookieName];
 								}
 							},

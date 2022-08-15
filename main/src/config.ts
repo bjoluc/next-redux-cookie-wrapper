@@ -1,3 +1,4 @@
+/* eslint-disable n/no-unsupported-features/es-syntax */
 import {CookieSerializeOptions} from "cookie";
 import {Except, SetRequired} from "type-fest";
 
@@ -37,7 +38,9 @@ export interface SubtreeConfig extends CookieOptions {
 	cookieName?: string;
 
 	/**
-	 * Whether or not to compress cookie values using lz-string. Defaults to `true`.
+	 * Whether or not to compress cookie values using lz-string. Defaults to `true` if
+	 * {@link SubtreeConfig.serializationFunction} and {@link SubtreeConfig.deserializationFunction}
+	 * have not been specified, and `false` otherwise.
 	 */
 	compress?: boolean;
 
@@ -104,7 +107,6 @@ export function processMiddlewareConfig(
 	// Set defaults and destructure the config object
 	const {subtrees, ...globalSubtreeConfig} = {
 		ignoreStateFromStaticProps: true,
-		compress: true,
 		path: "/",
 		sameSite: true,
 		...config,
@@ -134,7 +136,7 @@ export function processMiddlewareConfig(
 				};
 				return {
 					ignoreStateFromStaticProps,
-					compress,
+					compress: compress ?? !(serializationFunction ?? deserializationFunction),
 					subtree,
 					cookieName,
 					serializationFunction,

@@ -63,6 +63,41 @@ describe("processMiddlewareConfig()", () => {
 		]);
 	});
 
+	it("should default `compress` to `false` if `serializationFunction` or `deserializationFunction` are set, and `true` otherwise", () => {
+		expect(
+			processMiddlewareConfig({
+				subtrees: [
+					// `compress` should be `false`:
+					{subtree: "path1", serializationFunction: jest.fn()},
+					{subtree: "path2", deserializationFunction: jest.fn()},
+					{subtree: "path3", serializationFunction: jest.fn(), deserializationFunction: jest.fn()},
+
+					// `compress` should be `true`:
+					{subtree: "path4"},
+					{
+						subtree: "path5",
+						serializationFunction: jest.fn(),
+						deserializationFunction: jest.fn(),
+						compress: true,
+					},
+				],
+			})
+		).toEqual([
+			expect.objectContaining({compress: false}),
+			expect.objectContaining({compress: false}),
+			expect.objectContaining({compress: false}),
+			expect.objectContaining({compress: true}),
+			expect.objectContaining({compress: true}),
+		]);
+
+		expect(
+			processMiddlewareConfig({
+				compress: true,
+				subtrees: [{subtree: "path1", serializationFunction: jest.fn()}],
+			})
+		).toEqual([expect.objectContaining({compress: true})]);
+	});
+
 	it("should gather all cookie options under a `cookieOptions` key", () => {
 		const cookieOptions: CookieOptions = {
 			path: "/test",

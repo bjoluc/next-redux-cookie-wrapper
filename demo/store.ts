@@ -14,7 +14,7 @@ import {useDispatch} from "react-redux";
 export const pageSlice = createSlice({
 	name: "page",
 
-	initialState: {title: "", subtitle: "", counter: 0},
+	initialState: {title: "", subtitle: "", counter: 0, locale: "en"},
 
 	reducers: {
 		increaseCounter(state) {
@@ -23,6 +23,9 @@ export const pageSlice = createSlice({
 		setTitle(state, {payload}: PayloadAction<{title: string; subtitle: string}>) {
 			state.counter += 1;
 			Object.assign(state, payload);
+		},
+		setLocale(state, {payload}: PayloadAction<string>) {
+			state.locale = payload;
 		},
 	},
 
@@ -51,7 +54,16 @@ const makeStore = wrapMakeStore(() =>
 		middleware: (getDefaultMiddleware) =>
 			getDefaultMiddleware().prepend(
 				nextReduxCookieMiddleware({
-					subtrees: [`${pageSlice.name}.counter`],
+					subtrees: [
+						`${pageSlice.name}.counter`,
+						{
+							subtree: `${pageSlice.name}.locale`,
+							cookieName: "NEXT_LOCALE",
+							serializationFunction: String,
+							deserializationFunction: String,
+							compress: false,
+						},
+					],
 				})
 			),
 	})

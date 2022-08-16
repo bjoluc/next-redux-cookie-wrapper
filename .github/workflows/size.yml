@@ -2,8 +2,7 @@ name: size
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main, develop]
 
 env:
   HUSKY: 0

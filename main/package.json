@@ -87,11 +87,11 @@
 	},
 	"size-limit": [
 		{
-			"path": "dist/next-redux-cookie-wrapper.cjs.production.min.js",
+			"path": "dist/index.js",
 			"limit": "15 KB"
 		},
 		{
-			"path": "dist/next-redux-cookie-wrapper.esm.js",
+			"path": "dist/index.mjs",
 			"limit": "12 KB"
 		}
 	]

@@ -1,3 +1,4 @@
+/* eslint-disable n/no-unsupported-features/es-syntax */
 import {CookieSerializeOptions} from "cookie";
 import {Except, SetRequired} from "type-fest";
 
@@ -37,9 +38,24 @@ export interface SubtreeConfig extends CookieOptions {
 	cookieName?: string;
 
 	/**
-	 * Whether or not to compress cookie values using lz-string. Defaults to `true`.
+	 * Whether or not to compress cookie values using lz-string. Defaults to `true` if
+	 * {@link SubtreeConfig.serializationFunction} and {@link SubtreeConfig.deserializationFunction}
+	 * have not been specified, and `false` otherwise.
 	 */
 	compress?: boolean;
+
+	/**
+	 * A function that serializes subtree state into a string. Defaults to `JSON.stringify`.
+	 *
+	 * @note If you set this, make sure to also set the {@link SubtreeConfig.deserializationFunction} option accordingly.
+	 */
+	serializationFunction?: (state: any) => string;
+
+	/**
+	 * A function that parses a string created by {@link SubtreeConfig.serializationFunction} and returns the
+	 * corresponding subtree state. Defaults to `JSON.parse`.
+	 */
+	deserializationFunction?: (state: string) => any;
 }
 
 export interface InternalSubtreeConfig
@@ -91,7 +107,6 @@ export function processMiddlewareConfig(
 	// Set defaults and destructure the config object
 	const {subtrees, ...globalSubtreeConfig} = {
 		ignoreStateFromStaticProps: true,
-		compress: true,
 		path: "/",
 		sameSite: true,
 		...config,
@@ -106,16 +121,26 @@ export function processMiddlewareConfig(
 					current = {subtree: current};
 				}
 
-				const {ignoreStateFromStaticProps, compress, subtree, cookieName, ...cookieOptions} = {
+				const {
+					ignoreStateFromStaticProps,
+					compress,
+					subtree,
+					cookieName,
+					serializationFunction,
+					deserializationFunction,
+					...cookieOptions
+				} = {
 					...globalSubtreeConfig,
 					cookieName: current.subtree,
 					...current,
 				};
 				return {
 					ignoreStateFromStaticProps,
-					compress,
+					compress: compress ?? !(serializationFunction ?? deserializationFunction),
 					subtree,
 					cookieName,
+					serializationFunction,
+					deserializationFunction,
 					cookieOptions,
 				};
 			})

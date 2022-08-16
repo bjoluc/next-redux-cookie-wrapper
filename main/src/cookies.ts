@@ -1,36 +1,44 @@
+/* eslint-disable n/no-unsupported-features/es-syntax */ // https://github.com/xojs/xo/issues/598
+
 import {compressToEncodedURIComponent, decompressFromEncodedURIComponent} from "lz-string";
 import {GetServerSidePropsContext, NextPageContext} from "next";
 import {parseCookies, setCookie} from "nookies";
-import {JsonValue, SetRequired} from "type-fest";
+import {SetRequired} from "type-fest";
 
 import {InternalSubtreeConfig} from "./config";
 import {isClient} from "./util";
 
-export type Cookies = Record<string, JsonValue>;
+export type Cookies = Record<string, any>;
 
 export type CookieContext = SetRequired<
 	Partial<GetServerSidePropsContext | NextPageContext>,
 	"req" | "res"
 >;
 
-export type CookieConfig = Pick<InternalSubtreeConfig, "cookieName" | "compress" | "cookieOptions">;
+export type CookieConfig = Pick<
+	InternalSubtreeConfig,
+	"cookieName" | "compress" | "cookieOptions" | "serializationFunction" | "deserializationFunction"
+>;
 
 /**
- * An isomorphic class to set and get (compressed) state cookies.
+ * An isomorphic class to set and get (compressed) state cookies according to a set of
+ * {@link CookieConfig} objects.
  */
 export class StateCookies {
-	private static _encodeState(state: any) {
-		return encodeURIComponent(JSON.stringify(state));
+	private static _encodeState(state: any, {compress, serializationFunction}: CookieConfig): string {
+		const serializedState = (serializationFunction ?? JSON.stringify)(state);
+
+		return (compress ? compressToEncodedURIComponent : encodeURIComponent)(serializedState);
 	}
 
-	private static _encodeStateCompressed(state: any) {
-		return compressToEncodedURIComponent(JSON.stringify(state));
-	}
-
-	private static _decodeState(state: string, compressed: boolean): JsonValue {
-		return JSON.parse(
-			(compressed ? decompressFromEncodedURIComponent : decodeURIComponent)(state)!
-		) as JsonValue;
+	private static _decodeState(
+		state: string,
+		{compress, deserializationFunction}: CookieConfig
+	): any {
+		const decodedState = (compress ? decompressFromEncodedURIComponent : decodeURIComponent)(
+			state
+		)!;
+		return (deserializationFunction ?? JSON.parse)(decodedState);
 	}
 
 	protected _config = new Map<string, CookieConfig>();
@@ -61,9 +69,10 @@ export class StateCookies {
 			for (const [name, value] of Object.entries(
 				parseCookies(this._context, {decode: (value: string) => value})
 			)) {
-				const config = this._config.get(name);
-				if (config) {
-					this._cookies[name] = StateCookies._decodeState(value, config.compress);
+				const cookieConfig = this._config.get(name);
+				if (cookieConfig) {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					this._cookies[name] = StateCookies._decodeState(value, cookieConfig);
 				}
 			}
 		}
@@ -72,10 +81,12 @@ export class StateCookies {
 	}
 
 	public set(name: string, state: any) {
-		const {cookieOptions, compress} = this._config.get(name)!;
-		setCookie(this._context, name, state, {
-			...cookieOptions,
-			encode: compress ? StateCookies._encodeStateCompressed : StateCookies._encodeState,
+		const cookieConfig = this._config.get(name)!;
+		const encodedState = StateCookies._encodeState(state, cookieConfig);
+
+		setCookie(this._context, name, encodedState, {
+			...cookieConfig.cookieOptions,
+			encode: String,
 			httpOnly: false,
 		});
 	}

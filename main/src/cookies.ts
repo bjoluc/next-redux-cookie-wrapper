@@ -2,7 +2,7 @@
 
 import {compressToEncodedURIComponent, decompressFromEncodedURIComponent} from "lz-string";
 import {GetServerSidePropsContext, NextPageContext} from "next";
-import {parseCookies, setCookie} from "nookies";
+import {destroyCookie, parseCookies, setCookie} from "nookies";
 import {SetRequired} from "type-fest";
 
 import {InternalSubtreeConfig} from "./config";
@@ -17,7 +17,12 @@ export type CookieContext = SetRequired<
 
 export type CookieConfig = Pick<
 	InternalSubtreeConfig,
-	"cookieName" | "compress" | "cookieOptions" | "serializationFunction" | "deserializationFunction"
+	| "cookieName"
+	| "defaultState"
+	| "compress"
+	| "cookieOptions"
+	| "serializationFunction"
+	| "deserializationFunction"
 >;
 
 /**
@@ -66,13 +71,17 @@ export class StateCookies {
 		// Parse cookies if they have not been parsed, always re-parse cookies on the client
 		if (typeof this._cookies === "undefined" || isClient()) {
 			this._cookies = {};
-			for (const [name, value] of Object.entries(
-				parseCookies(this._context, {decode: (value: string) => value})
-			)) {
-				const cookieConfig = this._config.get(name);
-				if (cookieConfig) {
+			const allCookies = parseCookies(this._context, {decode: String});
+
+			for (const [cookieName, cookieConfig] of this._config.entries()) {
+				if (typeof allCookies[cookieName] !== "undefined") {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-					this._cookies[name] = StateCookies._decodeState(value, cookieConfig);
+					this._cookies[cookieName] = StateCookies._decodeState(
+						allCookies[cookieName],
+						cookieConfig
+					);
+				} else if (typeof cookieConfig.defaultState !== "undefined") {
+					this._cookies[cookieName] = cookieConfig.defaultState;
 				}
 			}
 		}
@@ -87,6 +96,14 @@ export class StateCookies {
 		setCookie(this._context, name, encodedState, {
 			...cookieConfig.cookieOptions,
 			encode: String,
+			httpOnly: false,
+		});
+	}
+
+	public delete(name: string) {
+		const {cookieOptions} = this._config.get(name)!;
+		destroyCookie(this._context, name, {
+			...cookieOptions,
 			httpOnly: false,
 		});
 	}

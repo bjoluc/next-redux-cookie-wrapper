@@ -7,7 +7,7 @@ import {destroyCookie} from "nookies";
 import {StateCookies} from "../src/cookies";
 
 describe("StateCookies on the client", () => {
-	it("should be able to set and get cookies", () => {
+	it("should be able to set, get, and delete cookies", () => {
 		const cookies = new StateCookies();
 		cookies.setConfigurations([
 			{cookieName: "cookie1", compress: true, cookieOptions: {}},
@@ -24,8 +24,10 @@ describe("StateCookies on the client", () => {
 		cookies.set("cookie2", cookie2);
 		expect(cookies.getAll()).toEqual({cookie1, cookie2});
 
-		destroyCookie(null, "cookie1");
-		destroyCookie(null, "cookie2");
+		cookies.delete("cookie2");
+		expect(cookies.getAll()).toEqual({cookie1});
+
+		cookies.delete("cookie1");
 		expect(cookies.getAll()).toEqual({});
 	});
 
@@ -67,5 +69,17 @@ describe("StateCookies on the client", () => {
 			serializationFunction.mockClear();
 			deserializationFunction.mockClear();
 		}
+	});
+
+	it("should respect a cookie's `defaultState` option", () => {
+		const cookies = new StateCookies();
+		cookies.setConfigurations([
+			{cookieName: "myCookie", compress: true, defaultState: "default", cookieOptions: {}},
+		]);
+
+		expect(cookies.getAll()).toEqual({myCookie: "default"});
+
+		cookies.set("myCookie", "custom");
+		expect(cookies.getAll()).toEqual({myCookie: "custom"});
 	});
 });

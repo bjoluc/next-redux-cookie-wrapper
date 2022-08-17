@@ -132,9 +132,17 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 					if (cookies) {
 						walkState(
 							subtrees,
-							({cookieName}, oldSubtreeState, newSubtreeState) => {
+							({cookieName, defaultState}, oldSubtreeState, newSubtreeState) => {
 								if (!isEqual(oldSubtreeState, newSubtreeState)) {
-									cookies.set(cookieName, newSubtreeState);
+									// Subtree state has changed
+									if (
+										typeof defaultState !== "undefined" &&
+										isEqual(newSubtreeState, defaultState)
+									) {
+										cookies.delete(cookieName);
+									} else {
+										cookies.set(cookieName, newSubtreeState);
+									}
 								}
 							},
 							oldState,

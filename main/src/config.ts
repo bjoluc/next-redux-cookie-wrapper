@@ -38,6 +38,21 @@ export interface SubtreeConfig extends CookieOptions {
 	cookieName?: string;
 
 	/**
+	 * If this option is set and no cookie exists for the subtree, the subtree's state will be set to
+	 * the provided `defaultState`. Similarly, if the subtree's state becomes the provided
+	 * `defaultState` and a cookie exists for the subtree, the cookie will be deleted.
+	 *
+	 * An example use case for the `defaultState` option are authorization cookies that are created
+	 * when a client logs in, and removed when the auth-related state is reset on logout.
+	 *
+	 * @note `defaultState` masks the subtree's initial Redux state, i.e., when `defaultState` differs
+	 * from the initial state, the initial state will always be replaced by `defaultState`. Hence,
+	 * when you provide a `defaultState`, it is recommended that it equals the subtree's initial Redux
+	 * state.
+	 */
+	defaultState?: unknown;
+
+	/**
 	 * Whether or not to compress cookie values using lz-string. Defaults to `true` if
 	 * {@link SubtreeConfig.serializationFunction} and {@link SubtreeConfig.deserializationFunction}
 	 * have not been specified, and `false` otherwise.
@@ -122,10 +137,11 @@ export function processMiddlewareConfig(
 				}
 
 				const {
-					ignoreStateFromStaticProps,
-					compress,
 					subtree,
+					ignoreStateFromStaticProps,
 					cookieName,
+					defaultState,
+					compress,
 					serializationFunction,
 					deserializationFunction,
 					...cookieOptions
@@ -135,10 +151,11 @@ export function processMiddlewareConfig(
 					...current,
 				};
 				return {
-					ignoreStateFromStaticProps,
-					compress: compress ?? !(serializationFunction ?? deserializationFunction),
 					subtree,
+					ignoreStateFromStaticProps,
 					cookieName,
+					defaultState,
+					compress: compress ?? !(serializationFunction ?? deserializationFunction),
 					serializationFunction,
 					deserializationFunction,
 					cookieOptions,

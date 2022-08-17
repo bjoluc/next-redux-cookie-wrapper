@@ -123,4 +123,26 @@ describe("nextReduxCookieMiddleware() on the client", () => {
 			["cookie2", "incoming2"],
 		]);
 	});
+
+	it("should delete state cookies that match their `defaultState`s", () => {
+		const {next, invoke, setState} = createMiddlewareTestFunctions({
+			subtrees: [{subtree: "mySubtree", cookieName: "myCookie", defaultState: {the: "default"}}],
+		});
+		const stateCookies = getStateCookiesInstance();
+
+		setState({mySubtree: {custom: "state"}});
+
+		// Simulate an action that resets the state to the default state
+		next.mockImplementationOnce(() => {
+			setState({mySubtree: {the: "default"}});
+		});
+		invoke({type: "some-action"});
+
+		// The middleware should not have set myCookie
+		expect(stateCookies.set).toHaveBeenCalledTimes(0);
+
+		// Instead, myCookie should have been deleted
+		expect(stateCookies.delete).toHaveBeenCalledTimes(1);
+		expect(stateCookies.delete).toHaveBeenCalledWith("myCookie");
+	});
 });

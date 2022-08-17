@@ -61,6 +61,7 @@ const makeStore = wrapMakeStore(() =>
 							cookieName: "NEXT_LOCALE",
 							serializationFunction: String,
 							deserializationFunction: String,
+							defaultState: pageSlice.getInitialState().locale,
 						},
 					],
 				})

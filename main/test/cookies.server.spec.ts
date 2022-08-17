@@ -8,9 +8,10 @@ import {CookieContext, StateCookies} from "../src/cookies";
 
 export function parseSetCookieHeaders(response: ServerResponse) {
 	const headers = response.getHeader("set-cookie") as string | string[];
-
 	return Object.fromEntries(
-		parse(headers, {decodeValues: false}).map((cookie) => [cookie.name, cookie.value])
+		Object.entries(parse(headers, {map: true, decodeValues: false}))
+			.filter(([, cookie]) => cookie.maxAge !== -1)
+			.map(([key, cookie]) => [key, cookie.value])
 	);
 }
 
@@ -27,17 +28,22 @@ describe("StateCookies on the server", () => {
 		context = createMocks();
 	});
 
-	it("should be able to set and get cookies", () => {
+	it("should be able to set, get, and delete cookies", () => {
 		const cookies = new StateCookies(context);
 		cookies.setConfigurations([
 			{cookieName: "cookie1", compress: true, cookieOptions: {}},
 			{cookieName: "cookie2", compress: false, cookieOptions: {path: "/"}},
+			{cookieName: "cookie3", compress: true, cookieOptions: {}},
 		]);
 
 		const cookie1 = {my: {fancy: "state"}};
 		const cookie2 = {second: "state"};
 		cookies.set("cookie1", cookie1);
 		cookies.set("cookie2", cookie2);
+
+		const cookie3 = {second: "state"};
+		cookies.set("cookie3", cookie3);
+		cookies.delete("cookie3");
 
 		// Parse the set-cookie header from the response
 		const parsedCookies = parseSetCookieHeaders(context.res);
@@ -55,5 +61,14 @@ describe("StateCookies on the server", () => {
 		// Retrieving the cookies a second time should not parse the cookies again but return the same
 		// object (request cookies do not change)
 		expect(cookies.getAll()).toBe(retrievedCookies);
+	});
+
+	it("should respect a cookie's `defaultState` option", () => {
+		const cookies = new StateCookies();
+		cookies.setConfigurations([
+			{cookieName: "myCookie", compress: true, defaultState: "default", cookieOptions: {}},
+		]);
+
+		expect(cookies.getAll()).toEqual({myCookie: "default"});
 	});
 });

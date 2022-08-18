@@ -74,16 +74,17 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 		],
 	};
 
-	it("should dispatch HYDRATE with the cookie state and update cookies on relevant state changes", () => {
-		const {store, next, invoke, setState} = createMiddlewareTestFunctions(config);
+	let stateCookies: jest.Mocked<StateCookies>;
+	const cookie1 = {my: {first: "cookie"}};
+	const cookie2 = 2;
 
-		const cookie1 = {my: {first: "cookie"}};
-		const cookie2 = 2;
-
-		const stateCookies = jest.mocked(new StateCookies(), true);
-
-		// Mock stateCookies methods
+	beforeEach(() => {
+		stateCookies = jest.mocked(new StateCookies(), true);
 		stateCookies.getAll.mockImplementation(() => ({cookie1, cookie2}));
+	});
+
+	it("should properly handle the `SERVE_COOKIES` action", () => {
+		const {store, invoke} = createMiddlewareTestFunctions(config);
 
 		// Invoke the middleware with a SERVE_COOKIES action and thereby let it dispatch a HYDRATE
 		// action
@@ -106,21 +107,63 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 			type: HYDRATE,
 			payload: {subtree1: cookie1, subtree2: cookie2},
 		});
+	});
 
-		// Let's assume the HYDRATE reducer fully updates the state
-		const hydratedState = {subtree1: cookie1, subtree2: cookie2};
-		setState(hydratedState);
+	describe("on hydration", () => {
+		const hydrateAction = {type: HYDRATE, payload: {subtree1: cookie1, subtree2: cookie2}};
 
-		// Simulate any other action that modifies the state (i.e., let `next` modify the state)
+		it("should not update cookies if `HYDRATE` reducer doesn't introduce custom state", () => {
+			const {next, invoke, setState} = createMiddlewareTestFunctions(config);
+			invoke({type: SERVE_COOKIES, payload: stateCookies});
+
+			// Let's invoke the middleware with the `HYDRATE` action that was dispatched as a reaction to
+			// the `SERVE_COOKIES` action, assuming that the HYDRATE reducer fully updates the state
+			next.mockImplementationOnce(() => {
+				setState(hydrateAction.payload);
+			});
+			invoke(hydrateAction);
+
+			// Since the incoming state is from cookies already, no cookies should have been set for it
+			expect(stateCookies.set).toHaveBeenCalledTimes(0);
+		});
+
+		it("should update relevant cookies if `HYDRATE` reducer introduces custom state", () => {
+			const {next, invoke, setState} = createMiddlewareTestFunctions(config);
+			invoke({type: SERVE_COOKIES, payload: stateCookies});
+
+			// Let's invoke the middleware with the `HYDRATE` action that was dispatched as a reaction to
+			// the `SERVE_COOKIES` action, but this time simulate a reducer producing state
+			// that differs from the current cookie state.
+			next.mockImplementationOnce(() => {
+				setState({...hydrateAction.payload, subtree2: "state introduced by HYDRATE reducer"});
+			});
+			invoke(hydrateAction);
+
+			// The subtrees with a state differing from the `HYDRATE` action's state should have been
+			// written to cookies.
+			expect(stateCookies.set).toHaveBeenCalledTimes(1);
+			expect(stateCookies.set).toHaveBeenCalledWith(
+				"cookie2",
+				"state introduced by HYDRATE reducer"
+			);
+		});
+	});
+
+	it("should update cookies on relevant state changes", () => {
+		const {next, invoke, setState} = createMiddlewareTestFunctions(config);
+		invoke({type: SERVE_COOKIES, payload: stateCookies});
+
+		// Simulate any action that modifies the state (i.e., let `next` modify the state)
+		setState({subtree1: cookie1, subtree2: cookie2});
 		next.mockImplementationOnce(() => {
-			setState({...hydratedState, subtree1: {modified: true}});
+			setState({subtree1: {modified: true}, subtree2: cookie2});
 		});
 		invoke({type: "some-action-that-changes-the-state"});
 
 		// The middleware should have updated cookie1, and only cookie1
 		expect(stateCookies.set).toHaveBeenCalledTimes(1);
 		expect(stateCookies.set).toHaveBeenCalledWith("cookie1", {modified: true});
-		stateCookies.set.mockReset();
+		stateCookies.set.mockClear();
 
 		// Simulate an action that leaves the state untouched
 		invoke({type: "some-action-that-does-not-change-the-state"});

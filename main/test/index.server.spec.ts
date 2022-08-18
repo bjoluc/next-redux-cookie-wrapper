@@ -1,6 +1,3 @@
-/**
- * @jest-environment node
- */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {Context, HYDRATE} from "next-redux-wrapper";

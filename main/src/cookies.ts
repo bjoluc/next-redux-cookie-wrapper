@@ -8,7 +8,7 @@ import {SetRequired} from "type-fest";
 import {InternalSubtreeConfig} from "./config";
 import {isClient} from "./util";
 
-export type Cookies = Record<string, any>;
+export type Cookies = Record<string, unknown>;
 
 export type CookieContext = SetRequired<
 	Partial<GetServerSidePropsContext | NextPageContext>,
@@ -30,7 +30,10 @@ export type CookieConfig = Pick<
  * {@link CookieConfig} objects.
  */
 export class StateCookies {
-	private static _encodeState(state: any, {compress, serializationFunction}: CookieConfig): string {
+	private static _encodeState(
+		state: unknown,
+		{compress, serializationFunction}: CookieConfig
+	): string {
 		const serializedState = (serializationFunction ?? JSON.stringify)(state);
 
 		return (compress ? compressToEncodedURIComponent : encodeURIComponent)(serializedState);
@@ -39,7 +42,7 @@ export class StateCookies {
 	private static _decodeState(
 		state: string,
 		{compress, deserializationFunction}: CookieConfig
-	): any {
+	): unknown {
 		const decodedState = (compress ? decompressFromEncodedURIComponent : decodeURIComponent)(
 			state
 		)!;
@@ -75,7 +78,6 @@ export class StateCookies {
 
 			for (const [cookieName, cookieConfig] of this._config.entries()) {
 				if (typeof allCookies[cookieName] !== "undefined") {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					this._cookies[cookieName] = StateCookies._decodeState(
 						allCookies[cookieName],
 						cookieConfig
@@ -89,7 +91,7 @@ export class StateCookies {
 		return this._cookies;
 	}
 
-	public set(name: string, state: any) {
+	public set(name: string, state: unknown) {
 		const cookieConfig = this._config.get(name)!;
 		const encodedState = StateCookies._encodeState(state, cookieConfig);
 

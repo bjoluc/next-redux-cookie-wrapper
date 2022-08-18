@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import {produce} from "immer";
 import get from "lodash/get";
 import set from "lodash/set";
-import {JsonObject, JsonValue} from "type-fest";
 
 import {InternalSubtreeConfig} from "./config";
 
@@ -24,19 +21,12 @@ import {InternalSubtreeConfig} from "./config";
  * @returns A copy of `stateA` where those subtrees for which the walker function has returned a
  * value have been replaced by that value.
  */
-export const walkState = <State extends JsonObject>(
+export const walkState = <State extends Record<string, any>>(
 	subtrees: InternalSubtreeConfig[],
-	walker: (
-		subtreeConfig: InternalSubtreeConfig,
-		subtreeA?: JsonValue,
-		subtreeB?: JsonValue
-	) => JsonValue | undefined | void,
+	walker: (subtreeConfig: InternalSubtreeConfig, subtreeA?: unknown, subtreeB?: unknown) => unknown,
 	stateA: State,
 	stateB?: State
 ) =>
-	// The following TS error is only reported when testing, hence not using ts-expect-error here
-	// eslint-disable-next-line @typescript-eslint/prefer-ts-expect-error
-	// @ts-ignore https://github.com/immerjs/immer/issues/839
 	produce(stateA, (draftState) => {
 		for (const subtreeConfig of subtrees) {
 			const {subtree} = subtreeConfig;

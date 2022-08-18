@@ -1,4 +1,5 @@
-/* eslint-disable n/no-unsupported-features/es-syntax */
+/* eslint-disable n/no-unsupported-features/es-syntax */ // https://github.com/xojs/xo/issues/598
+
 import {CookieSerializeOptions} from "cookie";
 import {Except, SetRequired} from "type-fest";
 
@@ -64,13 +65,13 @@ export interface SubtreeConfig extends CookieOptions {
 	 *
 	 * @note If you set this, make sure to also set the {@link SubtreeConfig.deserializationFunction} option accordingly.
 	 */
-	serializationFunction?: (state: any) => string;
+	serializationFunction?: (state: unknown) => string;
 
 	/**
 	 * A function that parses a string created by {@link SubtreeConfig.serializationFunction} and returns the
 	 * corresponding subtree state. Defaults to `JSON.parse`.
 	 */
-	deserializationFunction?: (state: string) => any;
+	deserializationFunction?: (state: string) => unknown;
 }
 
 export interface InternalSubtreeConfig

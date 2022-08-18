@@ -127,13 +127,22 @@ export const nextReduxCookieMiddleware: (config: NextReduxCookieMiddlewareConfig
 					const result = next(action);
 					const newState = store.getState() as JsonObject;
 
+					const isServerSideHydrateAction = !isClient() && action.type === HYDRATE;
+
 					// If cookies are available (which is not the case during `getStaticProps()`), write the
-					// new state into cookies wherever necessary
+					// new state into cookies wherever it differs from the old state
 					if (cookies) {
 						walkState(
 							subtrees,
 							({cookieName, defaultState}, oldSubtreeState, newSubtreeState) => {
-								if (!isEqual(oldSubtreeState, newSubtreeState)) {
+								// When handling the HYDRATE action on the server, old subtree state (initial state)
+								// is irrelevant for updating cookies. In this case, we have to consider the cookie
+								// state instead:
+								const originState = isServerSideHydrateAction
+									? (cookies.getAll()[cookieName] as unknown)
+									: oldSubtreeState;
+
+								if (!isEqual(originState, newSubtreeState)) {
 									// Subtree state has changed
 									if (
 										typeof defaultState !== "undefined" &&

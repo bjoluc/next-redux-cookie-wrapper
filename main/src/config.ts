@@ -105,7 +105,7 @@ export interface InternalSubtreeConfig
  * but `false` for `three`.
  */
 export interface NextReduxCookieMiddlewareConfig
-	extends Omit<SubtreeConfig, "subtree" | "cookieName"> {
+	extends Omit<SubtreeConfig, "subtree" | "cookieName" | "defaultState"> {
 	/**
 	 * Specifies which subtrees of the state shall be synced with cookies, and how. Takes a list of
 	 * subtree paths (e.g. `my.subtree`) and/or {@link SubtreeConfig} objects.

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.0](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.1.2...v2.2.0) (2022-08-22)
+
+
+### Features
+
+* Add `defaultState` option to remove a cookie for a specified default state ([9f0c224](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/9f0c2241888524e9987f7861f0c49cfdfdc8e04d)), closes [#17](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/17) [#17](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/17)
+* Add support for custom serialization functions ([#41](https://github.com/bjoluc/next-redux-cookie-wrapper/issues/41)) ([0bae6e9](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/0bae6e97e7bb4752980aa9b247a92499f86888b7))
+
+
+### Bug Fixes
+
+* Avoid redundant Set-Cookie headers in server responses ([8b48978](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/8b48978e8f2ef734e37197a03298ae67e6bada20))
+
 ### [2.1.2](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.1.1...v2.1.2) (2021-12-13)
 
 

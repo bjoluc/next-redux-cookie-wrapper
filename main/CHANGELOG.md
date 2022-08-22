@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.2.0...v2.2.1) (2022-08-22)
+
+
+### Bug Fixes
+
+* Exclude `defaultState` from `NextReduxCookieMiddlewareConfig` interface ([a7b3a49](https://github.com/bjoluc/next-redux-cookie-wrapper/commit/a7b3a4957213211e15a1166c518d4f33db7a6b9a))
+
 ## [2.2.0](https://github.com/bjoluc/next-redux-cookie-wrapper/compare/v2.1.2...v2.2.0) (2022-08-22)
 
 

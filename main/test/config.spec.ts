@@ -6,9 +6,8 @@ import {
 } from "../src/config";
 
 describe("processMiddlewareConfig()", () => {
-	// Temporarily skipped due to https://github.com/facebook/jest/issues/13134
-	it.skip("should turn subtree strings into config objects", () => {
-		expect(processMiddlewareConfig({subtrees: ["path1", {subtree: "path2"}]})).toMatchSnapshot([
+	it("should turn subtree strings into config objects", () => {
+		expect(processMiddlewareConfig({subtrees: ["path1", {subtree: "path2"}]})).toEqual([
 			expect.objectContaining<SubtreeConfig>({subtree: "path1"}),
 			expect.objectContaining<SubtreeConfig>({subtree: "path2"}),
 		]);

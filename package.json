@@ -15,9 +15,9 @@
 	"devDependencies": {
 		"@bjoluc/eslint-config-xo-next": "^1.1.0",
 		"@bjoluc/semantic-release-config-npm": "^3.0.0",
-		"husky": "^8.0.1",
+		"husky": "^8.0.2",
 		"lint-staged": "13.0.3",
-		"typedoc": "0.23.8"
+		"typedoc": "0.23.21"
 	},
 	"overrides": {
 		"react": "18.2.0",

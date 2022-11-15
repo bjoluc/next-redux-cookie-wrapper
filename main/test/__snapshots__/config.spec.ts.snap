@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`processMiddlewareConfig() should include global options in InternalSubtreeConfig objects 1`] = `
-Object {
+{
   "compress": false,
   "cookieName": "path1",
-  "cookieOptions": Object {
+  "cookieOptions": {
     "path": "/test",
     "sameSite": false,
     "secure": true,
@@ -18,10 +18,10 @@ Object {
 `;
 
 exports[`processMiddlewareConfig() should include global options in InternalSubtreeConfig objects 2`] = `
-Object {
+{
   "compress": false,
   "cookieName": "path2",
-  "cookieOptions": Object {
+  "cookieOptions": {
     "path": "/test",
     "sameSite": false,
     "secure": true,
@@ -31,34 +31,5 @@ Object {
   "ignoreStateFromStaticProps": false,
   "serializationFunction": undefined,
   "subtree": "path2",
-}
-`;
-
-exports[`processMiddlewareConfig() should turn subtree strings into config objects 1`] = `
-Object {
-  "0": Object {
-    "compress": true,
-    "cookieName": "path1",
-    "cookieOptions": Object {
-      "path": "/",
-      "sameSite": true,
-    },
-    "deserializationFunction": undefined,
-    "ignoreStateFromStaticProps": true,
-    "serializationFunction": undefined,
-    "subtree": "path1",
-  },
-  "1": Object {
-    "compress": true,
-    "cookieName": "path2",
-    "cookieOptions": Object {
-      "path": "/",
-      "sameSite": true,
-    },
-    "deserializationFunction": undefined,
-    "ignoreStateFromStaticProps": true,
-    "serializationFunction": undefined,
-    "subtree": "path2",
-  },
 }
 `;

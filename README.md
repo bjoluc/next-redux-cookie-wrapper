@@ -1,7 +1,7 @@
 # next-redux-cookie-wrapper
 
 [![npm (tag)](https://img.shields.io/npm/v/next-redux-cookie-wrapper/latest)](https://www.npmjs.com/package/next-redux-cookie-wrapper)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/bjoluc/next-redux-cookie-wrapper/build)](https://github.com/bjoluc/next-redux-cookie-wrapper/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/bjoluc/next-redux-cookie-wrapper/build.yml)](https://github.com/bjoluc/next-redux-cookie-wrapper/actions)
 [![codecov](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper/branch/master/graph/badge.svg)](https://codecov.io/gh/bjoluc/next-redux-cookie-wrapper)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/xojs/xo)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)

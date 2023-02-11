@@ -4,13 +4,12 @@ import {Provider} from "react-redux";
 
 import {wrapper} from "../store";
 
-const App = ({Component, ...appProps}: AppProps) => {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	const {store, props} = wrapper.useWrappedStore(appProps);
+const App = ({Component, pageProps}: AppProps) => {
+	const store = wrapper.useStore();
 
 	return (
 		<Provider store={store}>
-			<Component {...props.pageProps} />
+			<Component {...pageProps} />
 		</Provider>
 	);
 };

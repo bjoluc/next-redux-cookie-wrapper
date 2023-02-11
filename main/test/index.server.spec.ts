@@ -1,69 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import {Context, HYDRATE} from "next-redux-wrapper";
-
-import {SERVE_COOKIES, wrapMakeStore} from "../src";
 import {NextReduxCookieMiddlewareConfig} from "../src/config";
 import {StateCookies} from "../src/cookies";
-import {
-	createMiddlewareTestFunctions,
-	makeAppContext,
-	makePageContext,
-	makeServerSidePropsContext,
-	makeStaticPropsContext,
-	makeStore,
-} from "./util";
+import {createMiddlewareTestFunctions} from "./util";
 
 jest.mock("../src/cookies");
-
-describe("wrapMakeStore() on the server", () => {
-	const serverCookieActionMatcher = expect.objectContaining({
-		type: SERVE_COOKIES,
-		payload: expect.any(StateCookies),
-	});
-
-	describe("should dispatch the SERVE_COOKIES action", () => {
-		let context: Context;
-
-		test("if the context is a GetServerSidePropsContext", () => {
-			context = makeServerSidePropsContext();
-		});
-
-		test("if the context is a NextPageContext with a req and res property", () => {
-			context = makePageContext(true);
-		});
-
-		test("if an AppContext is provided that contains a NextPageContext with a req and res property", () => {
-			context = makeAppContext(makePageContext(true));
-		});
-
-		afterEach(() => {
-			const store = wrapMakeStore(makeStore)(context);
-			expect(store.dispatch).toHaveBeenCalledWith(serverCookieActionMatcher);
-		});
-	});
-
-	describe("should not dispatch the SERVE_COOKIES action", () => {
-		let context: Context;
-
-		test("if the context is a GetStaticPropsContext", () => {
-			context = makeStaticPropsContext();
-		});
-
-		test("if the context is a NextPageContext without a req and res property", () => {
-			context = makePageContext(false);
-		});
-
-		test("if an AppContext is provided that contains a NextPageContext without a req or res property", () => {
-			context = makeAppContext(makePageContext(false));
-		});
-
-		afterEach(() => {
-			const store = wrapMakeStore(makeStore)(context);
-			expect(store.dispatch).toHaveBeenCalledTimes(0);
-		});
-	});
-});
 
 describe("nextReduxCookieMiddleware() on the server", () => {
 	const config: NextReduxCookieMiddlewareConfig = {
@@ -79,7 +20,7 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 	const cookie2 = 2;
 
 	beforeEach(() => {
-		stateCookies = jest.mocked(new StateCookies(), true);
+		stateCookies = jest.mocked(new StateCookies());
 		stateCookies.getAll.mockImplementation(() => ({cookie1, cookie2}));
 	});
 
@@ -88,7 +29,7 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 
 		// Invoke the middleware with a SERVE_COOKIES action and thereby let it dispatch a HYDRATE
 		// action
-		invoke({type: SERVE_COOKIES, payload: stateCookies});
+		invoke({type: "SERVE_COOKIES", payload: stateCookies});
 
 		expect(stateCookies.setConfigurations).toHaveBeenCalledTimes(1);
 		expect(stateCookies.setConfigurations).toHaveBeenCalledWith([
@@ -104,17 +45,17 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 
 		expect(store.dispatch).toHaveBeenCalledTimes(1);
 		expect(store.dispatch).toHaveBeenCalledWith({
-			type: HYDRATE,
+			type: "HYDRATE",
 			payload: {subtree1: cookie1, subtree2: cookie2},
 		});
 	});
 
 	describe("on hydration", () => {
-		const hydrateAction = {type: HYDRATE, payload: {subtree1: cookie1, subtree2: cookie2}};
+		const hydrateAction = {type: "HYDRATE", payload: {subtree1: cookie1, subtree2: cookie2}};
 
 		it("should not update cookies if `HYDRATE` reducer doesn't introduce custom state", () => {
 			const {next, invoke, setState} = createMiddlewareTestFunctions(config);
-			invoke({type: SERVE_COOKIES, payload: stateCookies});
+			invoke({type: "SERVE_COOKIES", payload: stateCookies});
 
 			// Let's invoke the middleware with the `HYDRATE` action that was dispatched as a reaction to
 			// the `SERVE_COOKIES` action, assuming that the HYDRATE reducer fully updates the state
@@ -129,7 +70,7 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 
 		it("should update relevant cookies if `HYDRATE` reducer introduces custom state", () => {
 			const {next, invoke, setState} = createMiddlewareTestFunctions(config);
-			invoke({type: SERVE_COOKIES, payload: stateCookies});
+			invoke({type: "SERVE_COOKIES", payload: stateCookies});
 
 			// Let's invoke the middleware with the `HYDRATE` action that was dispatched as a reaction to
 			// the `SERVE_COOKIES` action, but this time simulate a reducer producing state
@@ -151,7 +92,7 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 
 	it("should update cookies on relevant state changes", () => {
 		const {next, invoke, setState} = createMiddlewareTestFunctions(config);
-		invoke({type: SERVE_COOKIES, payload: stateCookies});
+		invoke({type: "SERVE_COOKIES", payload: stateCookies});
 
 		// Simulate any action that modifies the state (i.e., let `next` modify the state)
 		setState({subtree1: cookie1, subtree2: cookie2});
@@ -177,7 +118,7 @@ describe("nextReduxCookieMiddleware() on the server", () => {
 		invoke(action);
 		expect(next).toHaveBeenLastCalledWith(action);
 
-		const hydrateAction = {type: HYDRATE, payload: {}};
+		const hydrateAction = {type: "HYDRATE", payload: {}};
 		invoke(hydrateAction);
 		expect(next).toHaveBeenLastCalledWith(hydrateAction);
 

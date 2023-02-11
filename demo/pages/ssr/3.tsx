@@ -4,7 +4,10 @@ import React from "react";
 import {DemoComponent} from "../../demo-component";
 import {pageSlice, setTitleWithDelay, wrapper} from "../../store";
 
-const Page: NextPage = (props) => <DemoComponent />;
+const Page: NextPage = (props) => {
+	wrapper.useHydration(props);
+	return <DemoComponent />;
+};
 
 Page.getInitialProps = wrapper.getInitialPageProps((store) => async ({locale}) => {
 	store.dispatch(pageSlice.actions.setLocale(locale!));

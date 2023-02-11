@@ -7,8 +7,12 @@ import {
 	createSlice,
 } from "@reduxjs/toolkit";
 import delay from "delay";
-import {nextReduxCookieMiddleware, wrapMakeStore} from "next-redux-cookie-wrapper";
-import {HYDRATE, createWrapper} from "next-redux-wrapper";
+import {
+	IMPORT_COOKIE_STATE,
+	importCookieState,
+	nextReduxCookieMiddleware,
+} from "next-redux-cookie-wrapper";
+import {MakeStore, createWrapper} from "next-redux-wrapper";
 import {useDispatch} from "react-redux";
 
 export const pageSlice = createSlice({
@@ -30,10 +34,10 @@ export const pageSlice = createSlice({
 	},
 
 	extraReducers(builder) {
-		builder.addCase<typeof HYDRATE, PayloadAction<AppState, typeof HYDRATE>>(
-			HYDRATE,
-			(state, {payload}) => ({...state, ...payload.page})
-		);
+		builder.addCase<
+			typeof IMPORT_COOKIE_STATE,
+			PayloadAction<AppState, typeof IMPORT_COOKIE_STATE>
+		>(IMPORT_COOKIE_STATE, (state, {payload}) => ({...state, ...payload.page}));
 	},
 });
 
@@ -45,28 +49,32 @@ export const setTitleWithDelay: ActionCreator<AppThunkAction> =
 
 export const selectPage = (state: AppState) => state[pageSlice.name];
 
-const makeStore = wrapMakeStore(() =>
-	configureStore({
+const makeStore = ({context, reduxWrapperMiddleware}: Parameters<MakeStore<any>>[0]) => {
+	const store = configureStore({
 		reducer: {
 			[pageSlice.name]: pageSlice.reducer,
 		},
 		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware().prepend(
-				nextReduxCookieMiddleware({
-					subtrees: [
-						`${pageSlice.name}.counter`,
-						{
-							subtree: `${pageSlice.name}.locale`,
-							cookieName: "NEXT_LOCALE",
-							serializationFunction: String,
-							deserializationFunction: String,
-							defaultState: pageSlice.getInitialState().locale,
-						},
-					],
-				})
-			),
-	})
-);
+			getDefaultMiddleware()
+				.concat(
+					nextReduxCookieMiddleware(context, {
+						subtrees: [
+							`${pageSlice.name}.counter`,
+							{
+								subtree: `${pageSlice.name}.locale`,
+								cookieName: "NEXT_LOCALE",
+								serializationFunction: String,
+								deserializationFunction: String,
+								defaultState: pageSlice.getInitialState().locale,
+							},
+						],
+					})
+				)
+				.concat(reduxWrapperMiddleware),
+	});
+	importCookieState(store);
+	return store;
+};
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore["getState"]>;
@@ -78,6 +86,6 @@ export type AppThunkAction<ReturnType = Promise<void>> = ThunkAction<
 	AnyAction
 >;
 
-export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppDispatch = () => useDispatch();
 
 export const wrapper = createWrapper<AppStore>(makeStore, {debug: true});

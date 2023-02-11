@@ -4,9 +4,10 @@ import React from "react";
 import {DemoComponent} from "../../demo-component";
 import {pageSlice, setTitleWithDelay, wrapper} from "../../store";
 
-const Page: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props) => (
-	<DemoComponent />
-);
+const Page: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props) => {
+	wrapper.useHydration(props);
+	return <DemoComponent />;
+};
 
 export const getServerSideProps = wrapper.getServerSideProps(
 	(store) =>

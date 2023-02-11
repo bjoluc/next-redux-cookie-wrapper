@@ -3,30 +3,29 @@
  */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import {HYDRATE} from "next-redux-wrapper";
-
-import {wrapMakeStore} from "../src";
+import {IMPORT_COOKIE_STATE, importCookieState} from "../src";
 import {NextReduxCookieMiddlewareConfig} from "../src/config";
 import {StateCookies} from "../src/cookies";
 import {createMiddlewareTestFunctions, makeStore} from "./util";
 
 jest.mock("../src/cookies");
 
-describe("wrapMakeStore() on the client", () => {
-	it("should dispatch an empty HYDRATE action", () => {
-		const store = wrapMakeStore(makeStore)({}); // `next-redux-wrapper` always provides an empty context object on the client
+describe("importCookieState()", () => {
+	it("should dispatch an empty IMPORT_COOKIE_STATE action", () => {
+		const store = makeStore();
+		importCookieState(store);
 		expect(store.dispatch).toHaveBeenCalledTimes(1);
-		expect(store.dispatch).toHaveBeenCalledWith({type: HYDRATE, payload: {}});
+		expect(store.dispatch).toHaveBeenCalledWith({type: IMPORT_COOKIE_STATE});
 	});
 });
 
 describe("nextReduxCookieMiddleware()", () => {
-	const stateCookiesClassMock = jest.mocked(StateCookies, true);
+	const stateCookiesClassMock = jest.mocked(StateCookies);
 
 	const getStateCookiesInstance = () => {
 		// The middleware should have created a StateCookies object – let's sneak it!
 		expect(stateCookiesClassMock.mock.instances).toHaveLength(1);
-		return jest.mocked(stateCookiesClassMock.mock.instances[0], true);
+		return jest.mocked(stateCookiesClassMock.mock.instances[0]);
 	};
 
 	beforeEach(() => {
@@ -68,10 +67,10 @@ describe("nextReduxCookieMiddleware()", () => {
 			// Simulate the HYDRATE action for `getServerSideProps()` (i.e., the cookies also have the incoming state)
 			stateCookies.getAll.mockReturnValue({cookie1: "incoming1", cookie2: "incoming2"});
 			const ssrHydratePayload = {subtree1: "incoming1", subtree2: "incoming2"};
-			invoke({type: HYDRATE, payload: ssrHydratePayload});
+			invoke({type: "HYDRATE", payload: ssrHydratePayload});
 
 			// The Hydrate payload should not have been changed (cookies have the same state as incoming state)
-			expect(next).toHaveBeenCalledWith({type: HYDRATE, payload: ssrHydratePayload});
+			expect(next).toHaveBeenCalledWith({type: "HYDRATE", payload: ssrHydratePayload});
 
 			// Even better (thanks to immer.js): The payload object should have remained the same!
 			// (unimportant additional check just because I was curious)
@@ -82,12 +81,12 @@ describe("nextReduxCookieMiddleware()", () => {
 			// to the server's state)
 			stateCookies.getAll.mockReturnValue({cookie1: "current1", cookie2: "current2"});
 			const staticHydratePayload = {subtree1: "incoming1", subtree2: "incoming2"};
-			invoke({type: HYDRATE, payload: staticHydratePayload});
+			invoke({type: "HYDRATE", payload: staticHydratePayload});
 
 			// The HYDRATE payload should be untouched for subtree1 (ignoreStateFromStaticProps is true
 			// there), but modified for subtree2 (where ignoreStateFromStaticProps is false)
 			expect(next).toHaveBeenCalledWith({
-				type: HYDRATE,
+				type: "HYDRATE",
 				payload: {subtree1: "current1", subtree2: "incoming2"},
 			});
 		});

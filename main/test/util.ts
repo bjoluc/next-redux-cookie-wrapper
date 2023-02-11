@@ -1,5 +1,4 @@
 import {GetServerSidePropsContext, GetStaticPropsContext, NextPageContext} from "next";
-import {Context} from "next-redux-wrapper";
 import {AppContext} from "next/app";
 import {createMocks} from "node-mocks-http";
 import {AnyAction, Store} from "redux";
@@ -10,7 +9,7 @@ import {NextReduxCookieMiddlewareConfig} from "../src/config";
 /**
  * Returns a stub "Redux store": An object with a mock dispatch function
  */
-export const makeStore = (_context?: Context) => ({dispatch: jest.fn()} as unknown as Store);
+export const makeStore = () => ({dispatch: jest.fn()} as unknown as Store);
 
 // Functions to create stub contexts
 export const makeServerSidePropsContext = () =>

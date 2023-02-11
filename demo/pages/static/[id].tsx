@@ -4,7 +4,10 @@ import React from "react";
 import {DemoComponent} from "../../demo-component";
 import {pageSlice, setTitleWithDelay, wrapper} from "../../store";
 
-const Page: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (props) => <DemoComponent />;
+const Page: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = (props) => {
+	wrapper.useHydration(props);
+	return <DemoComponent />;
+};
 
 export const getStaticPaths: GetStaticPaths = async ({locales}) => ({
 	paths: locales!.flatMap((locale) => [
